@@ -1,6 +1,5 @@
 ---
 - hosts: proxmox
-  gather_facts: yes
   become: yes
   become_user: root
   tasks:
