@@ -11,6 +11,8 @@
 [ubuntu]
 192.168.1.199
 192.168.1.90
+192.168.1.240
+localhost
 
 [ubuntu:vars]
 ansible_connection=ssh
