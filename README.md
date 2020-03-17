@@ -12,6 +12,8 @@ Initial set up and first steps
   5. Dev
   6. Workstation
   7. Storage
+  8. WBot01
+  9. WBot02
 - Playbooks
   1. ubuntu-update.yml
      - Updates ubuntu OS for the following hosts
@@ -20,6 +22,10 @@ Initial set up and first steps
   3. prox-update.yml
      - Updates Proxmox/Debian OS for the following hosts
        > Dev, Workstation, Storage
+  4. test.servertools.yml
+     - Updates OS, installs Docker and compose and elevates command privlages
 
 ### Future Plans
-
+1. finish test.servertools
+  - add docker compose and test on test nodes
+    > WBot01, WBot02
