@@ -1,0 +1,24 @@
+---
+- hosts: bots
+  gather_facts: yes
+  become: yes
+  become_user: root
+  tasks:
+# Update OS  
+  - name: Update the apt repo
+    apt: update_cache=yes cache_valid_time=3600
+  - name: Upgrade all packages
+    apt: upgrade=dist
+  - name: Check if reboot is needed
+    register: reboot_required_file
+    stat: path=/var/run/reboot-required get_md5=no
+# Install docker
+  - name: install docker
+    apt: 
+      name: docker.io
+  - name: start docker service
+    shell: systemctl start docker
+  - name: enable on docker on start up
+    shell: systemctl enable docker
+  - name: elevate docker command to sudo
+    shell: usermod -aG docker $USER

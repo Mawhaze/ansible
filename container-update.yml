@@ -1,5 +1,9 @@
 ---
-- hosts: ubuntu
+- hosts: 
   gather_facts: yes
   tasks:
-  - name: Check for 
+  - name: Change to docker directory
+    command: /bin/dir /home/mawhaze/docker/
+
+  - name: Check for updates
+    command: docker-compose pull
