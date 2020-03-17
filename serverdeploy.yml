@@ -1,5 +1,5 @@
 ---
-- hosts: bots
+- hosts: "{{ variable_host | default('bots') }}"
   gather_facts: yes
   become: yes
   become_user: root

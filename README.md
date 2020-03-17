@@ -22,7 +22,10 @@ Initial set up and first steps
   3. prox-update.yml
      - Updates Proxmox/Debian OS for the following hosts
        > Dev, Workstation, Storage
-  4. test.servertools.yml
+  4. serverdeploy.yml
+     - The usable version of test.servertools.yml
+       > run with --extra-vars "variable_host=TARGETHOST"
+  5. test.servertools.yml
      - Updates OS, installs Docker and compose and elevates command privlages
 
 ### Future Plans
