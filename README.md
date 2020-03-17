@@ -4,11 +4,11 @@
 - pull project to /etc/ansible
 ### Current State
 Initial set up and first steps
-- Currently managed hosts
-  1. CDocker01
-  2. CNetServ01
-  3. WDevTest01
-  4. CDevTest01
+- Currently managed hosts | groups
+  1. CDocker01            | 1. ubuntu
+  2. CNetServ01           | 2. proxmox
+  3. WDevTest01           | 3. docker
+  4. CDevTest01           | 4. bots
   5. Dev
   6. Workstation
   7. Storage
