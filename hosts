@@ -15,6 +15,7 @@ localhost
 192.168.1.199
 192.168.1.90
 192.168.1.240
+192.168.1.224
 localhost
 
 [ubuntu:vars]
@@ -25,6 +26,7 @@ ansible_python_interpreter=/usr/bin/python3
 [docker]
 192.168.1.199
 192.168.1.90
+192.168.1.224
 
 [proxmox]
 192.168.1.233
