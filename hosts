@@ -12,10 +12,9 @@
 localhost
 
 [ubuntu]
-192.168.1.199
-192.168.1.90
-192.168.1.240
-192.168.1.224
+CDocker01 ansible_host=192.168.1.199
+CNetServ01 ansible_host=192.168.1.90
+CLanCache01 ansible_host=192.168.1.224
 localhost
 
 [ubuntu:vars]
@@ -24,14 +23,14 @@ ansible_user=mawhaze
 ansible_python_interpreter=/usr/bin/python3
 
 [docker]
-192.168.1.199
-192.168.1.90
-192.168.1.224
+CDocker01 ansible_host=192.168.1.199
+CNetServ01 ansible_host=192.168.1.90
+CLanCache01 ansible_host=192.168.1.224
 
 [proxmox]
-192.168.1.233
-192.168.1.100
-192.168.1.169
+Dev ansible_host=192.168.1.233
+Storage ansible_host=192.168.1.100
+Workstation ansible_host=192.168.1.169
 
 [proxmox:vars]
 ansible_connection=ssh
