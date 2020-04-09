@@ -1,0 +1,12 @@
+---
+- hosts: proxmox
+  become: yes
+  become_user: root
+  tasks:
+  - name: Update the apt repo
+    apt: update_cache=yes cache_valid_time=3600
+  - name: Upgrade all packages
+    apt: upgrade=dist
+  - name: Check if reboot is needed
+    register: reboot_required_file
+    stat: path=/var/run/reboot-required get_md5=no
