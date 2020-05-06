@@ -2,28 +2,235 @@
 - hosts: bots
   gather_facts: yes
   become: yes
-  become_user: root
+  become_method: sudo
   tasks:
-# Update OS  
-  - name: Update the apt repo
-    apt: update_cache=yes cache_valid_time=3600
-  - name: Upgrade all packages
-    apt: upgrade=dist
-  - name: Check if reboot is needed
-    register: reboot_required_file
-    stat: path=/var/run/reboot-required get_md5=no
-# Install docker
-  - name: install docker
+
+# Update OS 
+  - name: Update packages
     apt: 
+      update_cache: yes 
+      force_apt_get: yes 
+      cache_valid_time: 3600
+
+  - name: Upgrade all apt packages
+    apt: 
+      upgrade: dist 
+      force_apt_get: yes
+
+  - name: Check if a reboot is needed for Ubuntu
+    stat: 
+      path: /var/run/reboot-required 
+    register: results
+    changed_when: results.stat.exists
+    ignore_errors: yes
+    notify: restart-required
+ 
+# Install & configure docker/compose 
+  - name: Install docker
+    apt:
       name: docker.io
-  - name: start docker service
-    shell: systemctl start docker
-  - name: enable on docker on start up
-    shell: systemctl enable docker
-  - name: elevate docker command to sudo
-    shell: usermod -aG docker $USER
-# Install Docker Compose
-  - name: install docker-compose
-    shell: sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - name: privlage docker-compose command
-    shell: sudo chmod +x /usr/local/bin/docker-compose
+      state: latest
+    register: result
+
+  - name: Start docker services
+    service:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: add docker group
+    group:
+      name: docker
+      state: present
+
+  - name: add user to docker group
+    user:
+      name: mawhaze 
+      append: yes
+      groups: docker
+
+  - name: Install docker compose  
+    shell: curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    when: result is changed
+    args:
+      warn: no
+
+  - name: Make docker-compose able to execute
+    file:
+      path: /usr/local/bin/docker-compose
+      mode: 0774
+    when: result is changed
+
+# Set up python so docker can be used by  anisble
+  - name: add python ppa
+    apt_repository:
+      repo: ppa:deadsnakes/ppa
+      state: present
+
+  - name: install python 
+    apt:
+      name: 
+        - python3.8
+        - python3-pip
+        - python3-virtualenv
+        - python3-dev
+        - virtualenv
+      state: present  
+  
+  - name: install python setup tools
+    pip: 
+      name: setuptools
+      state: present 
+      executable: pip3
+
+  - name: add Docker sdk for python
+    pip:
+      name: 
+        - docker
+        - docker-compose
+      executable: pip3
+
+# Set up mawhaze's git creds and pull/run net-monitor client
+  - name: Configure Git creds
+    git_config:
+      name: '{{ item.name }}'
+      scope: global
+      value: '{{ item.value }}'
+      state: present
+    loop:
+      - { name: 'user.name', value: 'Mawhaze' }
+      - { name: 'user.email', value: 'evancast92@gmail.com' }
+
+# Create docker folder and clone git project
+  - name: Create docker folder
+    become: no
+    file:
+      path: ~/docker/net-client
+      state: directory
+      mode: '0755'
+
+  - name: clone git project to docker folder
+    become: no
+    git:
+      repo: https://github.com/Mawhaze/net-client.git
+      dest: ~/docker/net-client
+      clone: yes
+      update: yes
+    register: client
+
+# start network monitor docker conatiners
+#  - name: stop old new-monitor
+#    become: no
+#    docker_compose:
+#      project_src: ~/docker/net-client
+#      state: absent
+#    when: client is changed
+
+#  - name: Run net-monitor docker compose
+#    become: no
+#    docker_compose:
+#      project_src: ~/docker/net-client
+#      build: yes
+#      state: present
+#    when: client is changed
+
+# update prometheus.yml scrape configs with new hosts
+  - name: Add host ip to Node Exporter
+    become: no
+    lineinfile:
+      path: ~/ansible/bootstrap.playbook/files/prometheus.yml
+      line: "              - '{{ ansible_default_ipv4.address }}:9100'"
+      insertbefore: "- job_name: 'cAdvisor'"
+      state: present 
+    delegate_to: 127.0.0.1
+    throttle: 1
+    notify: config-update
+
+  - name: Add host ip to cAdvisor
+    become: no
+    lineinfile:
+      path: ~/ansible/bootstrap-pb/files/prometheus.yml
+      line: "              - '{{ ansible_default_ipv4.address }}:8181'"
+      state: present
+    delegate_to: 127.0.0.1
+    throttle: 1
+    notify: config-update
+
+  handlers:
+ # update the prometheus scrape config
+  - name: Copy promethus.yml to monitor server
+    delegate_to: CNetServ01
+    run_once: true
+    copy:
+      src: /home/mawhaze/ansible/bootstrap.playbook/files/prometheus.yml
+      dest: /home/mawhaze/docker/net-service-dc/prometheus/prometheus.yml
+    listen: config-update
+
+# Validate docker-pip on net-monitor server
+  # Set up python so docker can be used by  anisble
+  - name: add python ppa
+    delegate_to: CNetServ01
+    run_once: true
+    apt_repository:
+      repo: ppa:deadsnakes/ppa
+      state: present
+    listen: config-update
+
+  - name: install python
+    delegate_to: CNetServ01
+    run_once: true
+    apt:
+      name:
+        - python3.8
+        - python3-pip
+        - python3-virtualenv
+        - python3-dev
+        - virtualenv
+      state: present
+    listen: config-update
+
+  - name: install python setup tools
+    delegate_to: CNetServ01
+    run_once: true
+    pip:
+      name: setuptools
+      state: present
+      executable: pip3
+    listen: config-update
+
+  - name: add Docker sdk for python
+    delegate_to: CNetServ01
+    run_once: true
+    pip:
+      name:
+        - docker
+        - docker-compose
+      executable: pip3
+    listen: config-update
+
+# Restart Prometheus with new config
+#  - name: Restart Prometheus with new config
+#    become: no
+#    delegate_to: CNetServ01
+#    run_once: true
+#    docker_compose:
+#      project_src: ~/docker/net-service-dc
+#      build: yes
+#      state: present
+#    listen: config-update
+
+ # reboot hosts that were updated
+  - name: Reboot required hosts
+    shell: reboot
+    async: 30
+    poll: 0
+    listen: restart-required
+
+  - name: Waiting for hosts to start up
+    wait_for_connection:
+      delay: 30
+      connect_timeout: 10
+      sleep: 10
+      timeout: 300
+    listen: restart-required
+

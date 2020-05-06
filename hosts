@@ -36,6 +36,16 @@ Workstation ansible_host=192.168.1.169
 ansible_connection=ssh
 ansible_user=root
 
+[k8s]
+CK8sMas01 ansible_host=192.168.1.110
+CK8sWork01 ansible_host=192.168.1.111
+CK8sWork02 ansible_host=192.168.1.112
+
+[k8s:vars]
+ansible_connection=ssh
+ansible_user=mawhaze
+ansible_python_interpreter=/usr/bin/python3
+
 [bots]
 192.168.1.41
 192.168.1.42
