@@ -1,5 +1,5 @@
 ---
-- hosts:  "{{ variable_host | default('test') }}"
+- hosts:  "{{ variable_host | default('bots') }}"
   become_method: sudo
   become: yes
   gather_facts: True

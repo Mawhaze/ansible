@@ -15,7 +15,6 @@ localhost
 CDocker01 ansible_host=192.168.1.199
 CNetServ01 ansible_host=192.168.1.90
 CLanCache01 ansible_host=192.168.1.224
-localhost
 
 [ubuntu:vars]
 ansible_connection=ssh
@@ -26,6 +25,13 @@ ansible_python_interpreter=/usr/bin/python3
 CDocker01 ansible_host=192.168.1.199
 CNetServ01 ansible_host=192.168.1.90
 CLanCache01 ansible_host=192.168.1.224
+CGitLab01 ansible_host=192.168.1.151
+
+[docker:vars]
+ansible_connection=ssh
+ansible_user=mawhaze
+ansible_python_interpreter=/usr/bin/python3
+
 
 [proxmox]
 Dev ansible_host=192.168.1.233
