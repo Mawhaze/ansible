@@ -36,7 +36,7 @@ ansible_python_interpreter=/usr/bin/python3
 [proxmox]
 Dev ansible_host=192.168.1.233
 Storage ansible_host=192.168.1.100
-Workstation ansible_host=192.168.1.169
+# Workstation ansible_host=192.168.1.169
 
 [proxmox:vars]
 ansible_connection=ssh
@@ -46,6 +46,7 @@ ansible_user=root
 CK8sMas01 ansible_host=192.168.1.110
 CK8sWork01 ansible_host=192.168.1.111
 CK8sWork02 ansible_host=192.168.1.112
+SK8sWork03 ansible_host=192.168.1.101
 
 [k8s:vars]
 ansible_connection=ssh

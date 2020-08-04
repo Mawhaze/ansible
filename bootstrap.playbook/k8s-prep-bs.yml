@@ -1,0 +1,53 @@
+---
+- hosts: bots
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  tasks:
+
+# Update OS 
+  - name: Update packages
+    apt: 
+      update_cache: yes 
+      force_apt_get: yes 
+      cache_valid_time: 3600
+
+  - name: Upgrade all apt packages
+    apt: 
+      upgrade: dist 
+      force_apt_get: yes
+
+  - name: Check if a reboot is needed for Ubuntu
+    stat: 
+      path: /var/run/reboot-required 
+    register: results
+    changed_when: results.stat.exists
+    ignore_errors: yes
+    notify: restart-required
+ 
+# Install & configure docker
+  - name: Install docker
+    apt:
+      name: docker.io
+      state: latest
+    register: result
+
+  - name: Start docker services
+    service:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: add docker group
+    group:
+      name: docker
+      state: present
+
+  - name: add user to docker group
+    user:
+      name: mawhaze 
+      append: yes
+      groups: docker
+
+  - name: configure cgroup driver
+    

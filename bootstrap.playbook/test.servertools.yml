@@ -109,22 +109,22 @@
       state: directory
       mode: '0755'
 
-  - name: clone git project to docker folder
-    become: no
-    git:
-      repo: https://github.com/Mawhaze/net-client.git
-      dest: ~/docker/net-client
-      clone: yes
-      update: yes
-    register: client
+  # - name: clone git project to docker folder
+  #   become: no
+  #   git:
+  #     repo: https://github.com/Mawhaze/net-client.git
+  #     dest: ~/docker/net-client
+  #     clone: yes
+  #     update: yes
+  #   register: client
 
-# start network monitor docker conatiners
-#  - name: stop old new-monitor
-#    become: no
-#    docker_compose:
-#      project_src: ~/docker/net-client
-#      state: absent
-#    when: client is changed
+#  start network monitor docker conatiners
+#   - name: stop old new-monitor
+#     become: no
+#     docker_compose:
+#       project_src: ~/docker/net-client
+#       state: absent
+#     when: client is changed
 
 #  - name: Run net-monitor docker compose
 #    become: no
