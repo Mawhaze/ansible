@@ -19,6 +19,14 @@ As with all lab projects, the main purpose of Ansible is to learn how. However t
 7. Maybe a telegram notification if the notification bot of Ender goes down
 8. Find out what else can can be automated within the lab
 
+### Next Steps
+- Critical
+  1. intigrade with project ender
+  2. begin playbook expansion
+  3. 
+- Meh
+
+
 ### Current State
 Initial set up and first steps
 - Currently managed hosts | groups
