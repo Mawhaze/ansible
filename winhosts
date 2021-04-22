@@ -1,7 +1,7 @@
 # ansible hosts file 
-## For GITLAB only, do not push to GITHUB
+# For GITLAB only, do not push to GITHUB
 
-winbots]
+[winbots]
 10.10.10.29
 
 [winbots:vars]
