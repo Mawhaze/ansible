@@ -48,5 +48,12 @@ ansible_connection=ssh
 ansible_user=mawhaze
 ansible_python_interpreter=/usr/bin/python3
 
+[winbots]
+10.10.10.29
 
+[winbots:vars]
+ansible_user: ansible
+ansible_password: Votive92
+ansible_connection: winrm
+ansible_winrm_transport: basic
 
