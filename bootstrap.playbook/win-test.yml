@@ -1,5 +1,5 @@
 ---
 - hosts: winbots
   tasks:
-    - name: Ping Windows Hosts
+    - name: Ping windows hosts
       win_ping:
