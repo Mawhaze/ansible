@@ -18,6 +18,7 @@ As with all lab projects, the main purpose of Ansible is to learn how. However t
 6. add to update playbook to be aware of what containers are on the host
 7. Maybe a telegram notification if the notification bot of Ender goes down
 8. Find out what else can can be automated within the lab
+9. Windows integration
 
 ### Next Steps
 - Critical
@@ -30,31 +31,13 @@ As with all lab projects, the main purpose of Ansible is to learn how. However t
 ### Current State
 Initial set up and first steps
 - Currently managed hosts | groups
-  1. CDocker01            | 1. ubuntu
-  2. CNetServ01           | 2. proxmox
-  3. CDevTest01           | 3. docker
-  4. CLanCache01          | 4. bots
-  5. Dev
-  6. Workstation
-  7. Storage
-  8. CBot01
-  9. CBot02
-  
-- Playbooks
-  1. ubuntu-update.yml
-     - Updates ubuntu OS for the following hosts
-       > Cdocker01, CNetServ01, CDevTest01, WDevTest01
-  
-  2. container-update.yml
-  
-  3. prox-update.yml
-     - Updates Proxmox/Debian OS for the following hosts
-       > Dev, Workstation, Storage
-  
-  4. serverdeploy.yml
-     - The usable version of test.servertools.yml
-       > run with --extra-vars "variable_host=TARGETHOST"
-  
-  5. test.servertools.yml
-     - Updates OS, installs Docker and compose and elevates command privlages
+  TBD
 
+- Playbooks
+  TBD
+
+  ### Where i left off
+  - adding windows into ansible
+    1. update play worked but timed out at both steps
+    2. add to the ansible notes section of homelab
+    
