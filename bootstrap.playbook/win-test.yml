@@ -1,13 +1,21 @@
 ---
 - hosts: winbots
   tasks:
-- name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
-  ansible.windows.win_updates:
-    category_names: 
-        - SecurityUpdates
-        - CriticalUpdates
-    state: searched
-    log_path: C:\ansible_wu.txt
+  - name: Search for updates, write to a file if they are found
+    win_updates:
+      category_names:
+      - CriticalUpdates
+      - SecurityUpdates 
+      stage: searched
+      log_path: C:\ansible_wu.txt
+      
+  - name: Install all critical and security updates
+    win_updates:
+      category_names:
+      - CriticalUpdates
+      - SecurityUpdates
+      state: installed
+    register: update_result
     ignore_errors: yes
 
   - name: Reboot host if required
