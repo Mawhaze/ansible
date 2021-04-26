@@ -6,7 +6,6 @@
 
 [winbots:vars]
 ansible_user=ansible
-ansible_password=Votive92
 # ansible_port=5985
 ansible_connection=winrm
 ansible_winrm_transport=basic
