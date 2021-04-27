@@ -1,7 +1,7 @@
 ---
 - hosts: winbots
   vars:
-    ansible_password: {{ win_password }}
+    ansible_password: "{{ win_password }}"
   tasks:
   - name: Search for updates, write to a file if they are found
     win_updates:
