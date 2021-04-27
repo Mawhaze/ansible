@@ -1,7 +1,8 @@
 ---
 - hosts: winbots
   tasks:
-  - include_vars:  
+  - include_vars: ./group_vars/win-test/vars.ymlS
+
   - name: Search for updates, write to a file if they are found
     win_updates:
       category_names:
