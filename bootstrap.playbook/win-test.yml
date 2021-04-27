@@ -1,7 +1,6 @@
 ---
 - hosts: winbots
   tasks:
-  - include_vars: "../group_vars/win-test/vars.yml"
   - name: Search for updates, write to a file if they are found
     win_updates:
       category_names:
@@ -9,6 +8,7 @@
       - SecurityUpdates 
       stage: searched
       log_path: C:\ansible_wu.txt
+    ignore_errors: yes
       
   - name: Install all critical and security updates
     win_updates:
