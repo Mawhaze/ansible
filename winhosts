@@ -5,3 +5,4 @@
 10.10.10.29
 
 [winbots:vars]
+ansible_connection: winrm
