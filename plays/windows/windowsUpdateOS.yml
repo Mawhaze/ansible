@@ -1,5 +1,4 @@
 ---
-- hosts: winbots
   tasks:
   - name: Search for updates, write to a file if they are found
     win_updates:

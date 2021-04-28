@@ -1,0 +1,5 @@
+---
+- hosts: winbots
+
+- name: Include search, update, and restart
+  import_playbook: plays/windows/windowsUpdateOS.yml
