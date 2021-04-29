@@ -2,4 +2,4 @@
 - hosts:  "{{ variable_host | default('winbots') }}"
 
 - name: Include search, update, and restart
-  import_playbook: plays/windows/windowsUpdateOS.yml
+  import_playbook: plays/windows/updateOS.yml
