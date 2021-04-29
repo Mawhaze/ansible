@@ -1,5 +1,10 @@
 ---
 - hosts:  "{{ variable_host | default('winbots') }}"
+  gather_facts: no
+  vars_prompt: 
+    - name: ansible_password
+      prompt: "ansible user password"
+      
   tasks:
   - name: Search for updates, write to a file if they are found
     win_updates:
