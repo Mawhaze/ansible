@@ -7,6 +7,7 @@
       category_names:
       - CriticalUpdates
       - SecurityUpdates 
+      - UpdateRollups
       stage: searched
       log_path: C:\ansible_wu.txt
     ignore_errors: yes
@@ -16,10 +17,12 @@
       category_names:
       - CriticalUpdates
       - SecurityUpdates
+      - UpdateRollups
       state: installed
     register: update_result
     ignore_errors: yes
 
   - name: Reboot host if required
     win_reboot:
+      reboot_timeout: 1200
     when: update_result.reboot_required
