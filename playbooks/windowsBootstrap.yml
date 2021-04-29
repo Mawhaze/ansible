@@ -3,7 +3,7 @@
   vars_prompt: 
     - name: ansible_password
       prompt: "ansible user password"
-  set_fact: ansible_password="{{ ansible_password }}"
+- set_fact: ansible_password="{{ ansible_password }}"
       
       
 - name: Include search, update, and restart
