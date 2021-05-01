@@ -13,6 +13,10 @@
     become: yes
     become_user: Administrator
 
+  - name: Reboot host
+    win_reboot:
+      reboot_timeout: 1200
+
   - name: install Ubuntu 20.04 LTS
     win_chocolatey:
       name: wsl-ubuntu-2004
