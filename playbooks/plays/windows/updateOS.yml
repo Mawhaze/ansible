@@ -18,7 +18,6 @@
       - CriticalUpdates
       - SecurityUpdates
       - UpdateRollups
-      state: installed
     register: update_result
     ignore_errors: yes
 
