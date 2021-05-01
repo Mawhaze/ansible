@@ -22,4 +22,4 @@
       name: wsl-ubuntu-2004
       state: present
     become: yes
-    become_user: Administrator
+    become_user: mawhaze
