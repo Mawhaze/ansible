@@ -8,7 +8,7 @@
       > winDsktpBootstrap 
 - Plays
   1. Windows
-      > updateOS 
+      > updateOS \
       > configureWSL2 
 
 ### How to run:
