@@ -1,0 +1,20 @@
+---
+- hosts:  "{{ variable_host | default('winbots') }}"
+  become_method: runas
+  gather_facts: no
+  tasks:
+  - name: enable WSL2
+    win_command: powershell.exe Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    become: yes
+    become_user: Administrator
+    register: enable_result
+
+  - name: Reboot host if required
+    win_reboot:
+      reboot_timeout: 1200
+    when: enable_result.reboot_required
+
+  - name: install Ubuntu 20.04 LTS
+    win_chocolatey:
+      name: wsl-ubuntu-2004
+      state: present
