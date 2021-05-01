@@ -3,8 +3,13 @@
   become_method: runas
   gather_facts: no
   tasks:
+  - name: Copy wsl script to target host
+    win_copy:
+      src: ~/ansible/psScripts/enableWSL2.ps1
+      dest: C:\Users\ansible\Documents\Scripts\enableWSL2.ps1
+
   - name: enable WSL2
-    win_command: powershell.exe Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    win_command: powershell.exe ExecutionPolicy ByPass -File C:\Users\ansible\Documents\Scripts\enableWSL2.ps1
     become: yes
     become_user: Administrator
     register: enable_result
