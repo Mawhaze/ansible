@@ -1,5 +1,16 @@
 # README
 
+### Current State
+- Groups
+  1. winbots
+- Playbooks
+  1. Windows
+    > winDsktpBootstrap \
+- Plays
+  1. Windows
+    > updateOS \
+    > configureWSL2 \
+
 ### How to run:
 - winDsktpBootstrap
 1. ansible-playbook -i HOSTFILE playbooks/TARGET_PLAYBOOK.yml
@@ -13,25 +24,11 @@
 
 ### Next Steps
 - Important
-  1. intigrade with project ender
+  1. Integrate with P:E
 - Meh
   1. 
 
-### Current State
-Initial set up and first steps
-- Currently managed groups
-  1. winbots
-  TBD
-
-- Plays
-  1. Windows
-    > updateOS \
-    > configureWSL2 \
-- Playbooks
-  1. Windows
-    > winDsktpBootstrap \
-  TBD
-
-  ### Where i left off
-  - adding windows into ansible
-    1. plays for installing software windows
+### Where i left off
+- adding windows into ansible
+  1. plays for installing desktop software windows
+  2. creating a domain controller
