@@ -21,5 +21,4 @@
     win_chocolatey:
       name: wsl-ubuntu-2004
       state: present
-    become: yes
     become_user: mawhaze
