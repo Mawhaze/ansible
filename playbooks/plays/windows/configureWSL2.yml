@@ -21,5 +21,6 @@
     win_chocolatey:
       name: wsl-ubuntu-2004
       state: present
-    become: yes
     bescome_user: "{{ target_user }}"
+    become: yes
+    
