@@ -12,12 +12,6 @@
     win_shell: C:\Users\ansible\Documents\enableWSL2.ps1
     become: yes
     become_user: Administrator
-    register: enable_result
-
-  - name: Reboot host if required
-    win_reboot:
-      reboot_timeout: 1200
-    when: enable_result.reboot_required
 
   - name: install Ubuntu 20.04 LTS
     win_chocolatey:
