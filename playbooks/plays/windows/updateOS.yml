@@ -1,23 +1,23 @@
 ---
 - hosts:  "{{ variable_host | default('winbots') }}"
   gather_facts: no
+  vars:
+    win_updates_categories:
+      - SecurityUpdates
+      - CriticalUpdates
+      - UpdateRollups
   tasks:
   - name: Search for updates, write to a file if they are found
     win_updates:
-      category_names:
-      - CriticalUpdates
-      - SecurityUpdates 
-      - UpdateRollups
-      stage: searched
+      category_names: "{{ win_updates_categories }}"
+      state: searched
       log_path: C:\ansible_wu.txt
     ignore_errors: yes
       
   - name: Install all critical and security updates
     win_updates:
-      category_names:
-      - CriticalUpdates
-      - SecurityUpdates
-      - UpdateRollups
+      category_names: "{{ win_updates_categories }}"
+      state: installed
     register: update_result
     ignore_errors: yes
 
