@@ -5,17 +5,17 @@
   1. winbots
 - Playbooks
   1. Windows
-    > winDsktpBootstrap \
+      > winDsktpBootstrap 
 - Plays
   1. Windows
-    > updateOS \
-    > configureWSL2 \
+      > updateOS 
+      > configureWSL2 
 
 ### How to run:
 - winDsktpBootstrap
 1. ansible-playbook -i HOSTFILE playbooks/TARGET_PLAYBOOK.yml
 2. Required Variables
-  > variable_host=TARGET_HOST_GROUP (default is winbots)
+    > variable_host=TARGET_HOST_GROUP (default is winbots)
 
 ### Future Plans
 1. Integration with Project: Ender. 
