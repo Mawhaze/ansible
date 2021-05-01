@@ -9,7 +9,7 @@
       dest: C:\Users\ansible\Documents\enableWSL2.ps1
 
   - name: enable WSL2
-    win_command: powershell.exe ExecutionPolicy ByPass -File C:\Users\ansible\Documents\enableWSL2.ps1
+    win_shell: C:\Users\ansible\Documents\enableWSL2.ps1
     become: yes
     become_user: Administrator
     register: enable_result
