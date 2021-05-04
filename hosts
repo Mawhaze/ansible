@@ -27,11 +27,6 @@ Storage ansible_host=10.10.10.12
 ansible_connection=ssh
 ansible_user=root
 
-[k8s:vars]
-ansible_connection=ssh
-ansible_user=mawhaze
-ansible_python_interpreter=/usr/bin/python3
-
 [bots]
 10.10.10.26
 10.10.10.27
