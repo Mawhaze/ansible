@@ -2,4 +2,16 @@
 - hosts:  "{{ variable_host | default('winbots') }}"
   gather_facts: no
   tasks:
-  - name: 
+  - name: Install Spotify
+    win_chocolatey:
+      name: spotify
+      state: present
+    become_user: "{{ target_user }}"
+    become: yes
+
+  - name: install Firefox
+    win_chocolatey:
+      name: firefox
+      state: present
+    become_user: "{{ target_user }}"
+    become: yes
