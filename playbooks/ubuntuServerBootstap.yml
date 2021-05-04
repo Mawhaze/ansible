@@ -4,7 +4,7 @@
   vars_prompt: 
     - name: ansible_password
       prompt: "ansible user password"
-    - name: ansible_become_pass
+    - name: ansible_sudo_pass
       prompt: "sudo password"
     - name: target_user
       prompt: "target user"
@@ -13,7 +13,7 @@
   - name: set user password for playbook
     set_fact: ansible_password="{{ ansible_password }}"
   - name: set sudo password
-    set_fact: ansible_password="{{ ansible_become_pass }}"
+    set_fact: ansible_password="{{ ansible_sudo_pass }}"
   - name: set target user profile 
     set_fact: target_user="{{ target_user }}"
 
