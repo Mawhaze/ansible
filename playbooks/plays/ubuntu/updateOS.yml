@@ -2,7 +2,7 @@
 - hosts:  "{{ variable_host | default('bots') }}"
   become_method: sudo
   become: yes
-  gather_facts: True
+  gather_facts: no
   tasks:
 
 # Update and upgrade base OS
