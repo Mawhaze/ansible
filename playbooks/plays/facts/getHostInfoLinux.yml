@@ -22,7 +22,7 @@
     - hosts:  "{{ variable_host | default('bots') }}"
       become_method: sudo
       become: yes
-      gather_facts: no
+      gather_facts: true
       tasks:
         - name: print host gather_facts
           debug: 
