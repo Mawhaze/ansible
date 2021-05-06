@@ -26,7 +26,7 @@
       tasks:
         - name: print host gather_facts
           debug: 
-            var: ansible_facts[ "hostname" ]
+            var: ansible_facts[ "nodename" ]
         - name: Copy facts to a file
           copy:
             content: "{{ ansible_facts }}"
