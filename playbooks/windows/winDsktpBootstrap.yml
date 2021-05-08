@@ -14,7 +14,7 @@
     set_fact: target_user="{{ target_user }}"
       
 - name: Include search, update, and restart
-  import_playbook: plays/windows/updateOS.yml
+  import_playbook: plays/updateOS.yml
 
 - name: Include enable wsl2 and install ubuntu
-  import_playbook: plays/windows/configureWSL2.yml
+  import_playbook: plays/configureWSL2.yml
