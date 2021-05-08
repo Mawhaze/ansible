@@ -34,4 +34,4 @@
             create: yes
             state: present
           loop:
-            - "ansible_hostname"
+            - "{{ ansible_hostname }}"
