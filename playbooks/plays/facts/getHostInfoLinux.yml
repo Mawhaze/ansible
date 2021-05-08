@@ -34,4 +34,6 @@
             create: yes
             state: present
           loop:
-            - "{{ ansible_hostname }}"
+            - "hostname: {{ ansible_hostname }}"
+            - "host distribution info: {{ ansible_distribution }}"
+            - "host network info: {{ ansible_eth0 }}"
