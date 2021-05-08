@@ -4,6 +4,13 @@
       become: yes
       gather_facts: true
       tasks:
+        - name: Mount Logs NFS
+          mount:
+            src: 10.10.10.20:/mnt/ZPool02/logs
+            path: /mnt/logs
+            opts: rw,sync,hard,intr
+            state: mounted
+            fstype: nfs
         - name: write facts to a file
           lineinfile:
             line: "{{ item }}"
