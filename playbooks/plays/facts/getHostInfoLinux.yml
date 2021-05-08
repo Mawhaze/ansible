@@ -18,7 +18,7 @@
         - name: write facts to a file
           lineinfile:
             line: "{{ item }}"
-            path: /logs/ansible/{{ ansible_hostname }}/endpoint_details.json
+            path: /logs/ansible/{{ ansible_hostname }}.json
             create: yes
             state: present
           become: yes
