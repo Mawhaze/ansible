@@ -26,3 +26,7 @@
             - "Hostname: {{ ansible_hostname }}"
             - "IP: {{ ansible_default_ipv4.address }}"
             - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+        - name: Unmount Logs
+          mount:
+            path: /logs
+            state: unmounted
