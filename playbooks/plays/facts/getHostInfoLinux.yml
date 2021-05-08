@@ -36,4 +36,4 @@
           loop:
             - "hostname: {{ ansible_hostname }}"
             - "host distribution info: {{ ansible_distribution }}"
-            - "host network info: {{ ansible_eth0 }}"
+            - "host network info: {{ ansible_default_ipv4 }}"
