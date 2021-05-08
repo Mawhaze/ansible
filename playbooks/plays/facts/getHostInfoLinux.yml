@@ -31,6 +31,6 @@
             create: yes
             state: present
           loop:
-            - "hostname: {{ ansible_hostname }}"
-            - "host distribution info: {{ ansible_distribution }}: {{ ansible_distribution_version }}"
-            - "host network info: {{ ansible_default_ipv4 }}"
+            - "Hostname: {{ ansible_hostname }}"
+            - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+            - "Network: {{ ansible_default_ipv4 }}"
