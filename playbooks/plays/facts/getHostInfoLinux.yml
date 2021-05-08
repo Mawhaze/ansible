@@ -26,7 +26,7 @@
       tasks:
         - name: print host gather_facts
           debug: 
-            var: ansible_facts["ansible_distribution"]
+            var: ansible_facts["nodename"]
         - name: write facts to a file
           lineinfile:
             line: "{{ item }}"
