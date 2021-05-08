@@ -4,6 +4,10 @@
       become: yes
       gather_facts: true
       tasks:
+        - name: Validate NFS is installed
+          apt:
+            name: nfs-common
+            state: present
         - name: Mount Logs NFS
           mount:
             src: 10.10.10.20:/mnt/ZPool02/logs
