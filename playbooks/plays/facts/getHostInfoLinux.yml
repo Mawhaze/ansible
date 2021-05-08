@@ -26,8 +26,12 @@
       tasks:
         - name: print host gather_facts
           debug: 
-            var: ansible_facts
-        - name: Copy facts to a file
-          copy:
-            content: "{{ ansible_facts }}"
-            dest: /tmp/ansible_facts_details.json
+            var: ansible_facts["ansible_distribution"]
+        - name: write facts to a file
+          lineinfile:
+            line: "{{ item }}"
+            path: /tmp/ansible_fact_details.json
+            loop:
+              - "ansible_hostname"
+              - "ansible_distribution"
+              - "ansible_eth0"
