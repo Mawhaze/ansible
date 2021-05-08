@@ -31,5 +31,5 @@
           lineinfile:
             line: "{{ item }}"
             path: /tmp/ansible_fact_details.json
-            loop:
-              - "ansible_hostname"
+          loop:
+            - "ansible_hostname"
