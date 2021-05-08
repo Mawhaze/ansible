@@ -29,5 +29,5 @@
             var: ansible_facts
         - name: Copy facts to a file
           copy:
-            content: "{{ ansible_facts[ 'nodename' ][ 'ansible_distribution' ][ 'ansible_eth0' ] }}"
+            content: "{{ ansible_facts }}"
             dest: /tmp/ansible_facts_details.json
