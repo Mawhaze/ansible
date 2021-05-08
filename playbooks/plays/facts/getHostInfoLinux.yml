@@ -17,4 +17,4 @@
         - name: Copy file to Control Node
           synchronize:
             src: /tmp/ansible/
-            dest: rsync://10.10.10.25/tmp/ansible/ 
+            dest: /tmp/ansible/ 
