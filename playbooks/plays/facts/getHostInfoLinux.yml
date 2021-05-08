@@ -7,7 +7,7 @@
         - name: Mount Logs NFS
           mount:
             src: 10.10.10.20:/mnt/ZPool02/logs
-            path: /mnt/logs
+            path: /logs
             opts: rw,sync,hard,intr
             state: mounted
             fstype: nfs
