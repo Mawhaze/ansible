@@ -26,12 +26,10 @@
       tasks:
         - name: print host gather_facts
           debug: 
-            var: ansible_facts["nodename"]
+            var: ansible_facts
         - name: write facts to a file
           lineinfile:
             line: "{{ item }}"
             path: /tmp/ansible_fact_details.json
             loop:
               - "ansible_hostname"
-              - "ansible_distribution"
-              - "ansible_eth0"
