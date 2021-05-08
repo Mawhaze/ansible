@@ -13,7 +13,7 @@
 
 ### How to run:
 - winDsktpBootstrap
-1. ansible-playbook -i HOSTFILE playbooks/TARGET_PLAYBOOK.yml
+1. ansible-playbook -i HOSTFILE playbooks/windows/TARGET_PLAYBOOK.yml
 2. Required Variables
     > variable_host=TARGET_HOST_GROUP (default is winbots)
 

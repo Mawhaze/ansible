@@ -18,4 +18,4 @@
     set_fact: target_user="{{ target_user }}"
 
 - name: updateOS
-  import_playbook: plays/ubuntu/updateOS.yml
+  import_playbook: plays/updateOS.yml
