@@ -18,14 +18,10 @@
         - name: write facts to a file
           lineinfile:
             line: "{{ item }}"
-            path: /tmp/ansible/{{ ansible_hostname }}/endpoint_details.json
+            path: /logs/ansible/{{ ansible_hostname }}/endpoint_details.json
             create: yes
             state: present
           loop:
             - "Hostname: {{ ansible_hostname }}"
             - "IP: {{ ansible_default_ipv4.address }}"
             - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
-        - name: Copy file to Control Node
-          synchronize:
-            src: /tmp/ansible/
-            dest: /tmp/ansible/ 
