@@ -21,6 +21,7 @@
             path: /logs/ansible/{{ ansible_hostname }}/endpoint_details.json
             create: yes
             state: present
+            become: yes
           loop:
             - "Hostname: {{ ansible_hostname }}"
             - "IP: {{ ansible_default_ipv4.address }}"
