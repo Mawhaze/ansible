@@ -40,7 +40,6 @@
             path: L:\ansible\{{ ansible_hostname }}.json
             create: yes
             state: present
-          become: yes
           loop:
             - "Hostname: {{ ansible_hostname }}"
             - "{{ ansible_facts }}" 
