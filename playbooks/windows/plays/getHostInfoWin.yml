@@ -32,7 +32,8 @@
         - name: mount logs drive
           win_mapped_drive:
             letter: L
-            path: \\10.10.10.20\mnt\ZPool02\logs
+            path: \\10.10.10.20\logs
+
         - name: write facts to a file
           lineinfile:
             line: "{{ item }}"
