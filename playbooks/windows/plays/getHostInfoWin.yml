@@ -36,7 +36,7 @@
             path: \\10.10.10.20\logs
 
         - name: write facts to a file
-          lineinfile:
+          win_lineinfile:
             line: "{{ item }}"
             path: L:\ansible\{{ ansible_hostname }}.json
             create: yes
