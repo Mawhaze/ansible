@@ -38,7 +38,7 @@
         - name: write facts to a file
           win_lineinfile:
             line: "{{ item }}"
-            path: L:\ansible\{{ ansible_hostname }}.json
+            path: L:\ansible\{{ ansible_hostname }}.txt
             create: yes
             state: present
           loop:
