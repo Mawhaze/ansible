@@ -40,5 +40,5 @@
             line: "{{ ansible_facts }}" 
             path: L:\ansible\{{ ansible_hostname }}.json
             create: yes
-            state: present
+            state: touch
           
