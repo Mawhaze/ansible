@@ -37,7 +37,7 @@
 
         - name: touch a logs file
           win_file:
-            path: 'L:\ansible\test.json'
+            path: \ansible\test.json
             state: touch  
 
         - name: write facts to a file
