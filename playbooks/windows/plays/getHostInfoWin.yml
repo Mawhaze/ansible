@@ -12,13 +12,13 @@
   
         - name: touch a logs file
           win_file:
-            path: 'C:\Users\ansible\{{ ansible_hostname | regex_replace('\\', '') }}-test.json'
+            path: 'C:\Users\ansible\"{{ ansible_hostname | regex_replace('^\\/|\\/$', '') }}"-test.json'
             state: touch  
 
         - name: write facts to a file
           win_lineinfile:
             line: "{{ ansible_facts }}" 
-            path: 'C:\Users\ansible\{{ ansible_hostname | regex_replace('\\', '') }}-test.json'
+            path: 'C:\Users\ansible\"{{ ansible_hostname | regex_replace('^\\/|\\/$', '') }}"-test.json'
             create: yes
             state: touch
           
