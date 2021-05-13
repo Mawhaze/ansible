@@ -37,13 +37,13 @@
 
         - name: touch a logs file
           win_file:
-            path: '\\logs\ansible\{{ ansible_hostname }}.json'
+            path: "L:\ansible\{{ ansible_hostname }}.json"
             state: touch  
 
         - name: write facts to a file
           win_lineinfile:
             line: "{{ ansible_facts }}" 
-            path: L:\ansible\{{ ansible_hostname }}.json
+            path: "L:\ansible\{{ ansible_hostname }}.json"
             create: yes
             state: touch
           
