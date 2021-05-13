@@ -35,6 +35,11 @@
             letter: L
             path: \\10.10.10.20\logs
 
+        - name: create file
+          win_file:
+            path: 'L:\ansible\{{ ansible_hostname }}.json
+            state: touch  
+
         - name: write facts to a file
           win_lineinfile:
             line: "{{ ansible_facts }}" 
