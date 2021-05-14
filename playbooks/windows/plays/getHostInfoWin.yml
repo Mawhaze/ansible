@@ -20,5 +20,5 @@
             line: "{{ ansible_facts }}" 
             path: C:\Users\ansible\win_hosts.json
             create: yes
-            state: touch
+            state: present
           
