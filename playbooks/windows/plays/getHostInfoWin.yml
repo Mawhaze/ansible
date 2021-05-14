@@ -19,10 +19,14 @@
         - name: write facts to a file
           throttle: 1
           win_lineinfile:
-            line: "{{ ansible_hostname }}" 
+            line: "{{ item }}" 
             path: C:\Users\ansible\{{ ansible_hostname }}.json
             create: yes
             state: present
+          with_items:
+            - "Hostname: {{ ansible_hostname }}"
+            - "IP: {{ ansible_default_ipv4.address }}"
+            - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
 
         - name: copy logs to file server
           throttle: 1
