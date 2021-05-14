@@ -11,11 +11,13 @@
           set_fact: ansible_password="{{ ansible_password }}"
   
         - name: touch a logs file
+          throttle: 1
           win_file:
             path: C:\Users\ansible\{{ ansible_hostname }}.json
             state: touch  
 
         - name: write facts to a file
+          throttle: 1
           win_lineinfile:
             line: "{{ ansible_hostname }}" 
             path: C:\Users\ansible\{{ ansible_hostname }}.json
