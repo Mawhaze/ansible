@@ -25,7 +25,7 @@
         - name: copy logs to file server
           throttle: 1
           win_copy: 
-            src: C:\Users\ansible\"{{ ansible_hostname }}".json
+            src: C:\Users\ansible\{{ ansible_hostname }}.json
             dest: \\10.10.10.20\logs
             remote_src: yes
           become: yes
