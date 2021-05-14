@@ -23,13 +23,13 @@
             state: present
 
         - name: copy logs to file server
-          serial: 1
           win_copy: 
             src: C:\Users\ansible\win_hosts.json
             dest: \\10.10.10.20\logs
             remote_src: yes
           become: yes
           become_method: runas
+          throtlle: 1
           vars:
             ansible_become_user: ansible
             ansible_become_pass: "{{ ansible_password }}"
