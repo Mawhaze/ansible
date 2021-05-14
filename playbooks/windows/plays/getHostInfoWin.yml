@@ -21,4 +21,9 @@
             path: C:\Users\ansible\win_hosts.json
             create: yes
             state: present
+
+        - name: copy logs to file server
+          win_copy: 
+            src: C:\Users\ansible\win_hosts.json
+            dest: \\10.10.10.20\logs\ansible\win_hosts.json
           
