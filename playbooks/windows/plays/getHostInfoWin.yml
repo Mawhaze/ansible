@@ -23,8 +23,8 @@
             state: present
 
         - name: copy logs to file server
-          win_copy: 
           throttle: 1
+          win_copy: 
             src: C:\Users\ansible\win_hosts.json
             dest: \\10.10.10.20\logs
             remote_src: yes
