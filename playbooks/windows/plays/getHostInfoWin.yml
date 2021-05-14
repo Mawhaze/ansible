@@ -24,8 +24,9 @@
             create: yes
             state: present
           with_items:
+            - "Date: {{ ansible_date_time.date }}"
             - "Hostname: {{ ansible_hostname }}"
-            - "IP: {{ ansible_default_ipv4.address }}"
+            - "IP: {{ ansible_ip_addresses }}"
             - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
 
         - name: copy logs to file server
