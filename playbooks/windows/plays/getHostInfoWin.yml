@@ -33,7 +33,7 @@
           throttle: 1
           win_copy: 
             src: C:\Users\ansible\{{ ansible_hostname }}.json
-            dest: \\10.10.10.20\logs
+            dest: \\10.10.10.20\logs\ansible
             remote_src: yes
           become: yes
           become_method: runas
