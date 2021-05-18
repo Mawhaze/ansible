@@ -1,5 +1,0 @@
----
-- hosts:  "{{ variable_host | default('winbots') }}"
-  gather_facts: no
-  tasks:
-  - name: Install Domain Controller role
