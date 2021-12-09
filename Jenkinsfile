@@ -1,7 +1,13 @@
-stages {
-    stage('Test run'){
+pipeline {
+    agent any
 
-        echo "Successful jenkins build from ansible push"
+    stages {
+        stage('Test run'){
+            steps {
+                echo "Successful jenkins build from ansible push"
 
+            }
+
+        }
     }
 }
