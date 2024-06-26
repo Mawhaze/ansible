@@ -1,0 +1,7 @@
+---
+# Run a play against proxmox_all_running hosts and gather facts
+- name: Filtering for Ubuntu hosts
+  hosts: proxmox_all_running
+  
+  roles:
+    - os_updates

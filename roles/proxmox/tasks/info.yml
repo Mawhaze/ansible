@@ -1,0 +1,15 @@
+---
+- name: Get node info
+  community.general.proxmox_node_info:
+    api_user: sa-ansible@pve
+    api_password: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-password', region='us-west-2', decrypt='true') }}"
+    api_host: https://10.10.10.10
+    api_port: 8006
+    validate_certs: false
+  register: node_info
+
+- name: Display node IP addresses
+  ansible.builtin.debug:
+    msg: "Node {{ item.node }} has IP address {{ item.ip }}"
+  loop: "{{ node_info.nodes }}"
+  when: item.ip is defined

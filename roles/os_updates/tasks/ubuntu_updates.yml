@@ -1,0 +1,10 @@
+---
+- name: Update package list and check for upgrades
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: dry-run
+  register: apt_upgrade
+
+- name: Print number of packages that can be upgraded
+  ansible.builtin.debug:
+    msg: "{{ apt_upgrade.packages | length }} packages can be upgraded."
