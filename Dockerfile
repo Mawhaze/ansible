@@ -17,6 +17,7 @@ RUN useradd -m -s /bin/bash sa-ansible
 # Set working directory to sa-ansible home
 WORKDIR /home/sa-ansible
 
+# Replace COPY with mounting creds from host
 COPY test-creds/ansible_ed25519 /home/sa-ansible/.ssh/id_ed25519
 COPY test-creds/ansible_ed25519.pub /home/sa-ansible/.ssh/id_ed25519.pub
 
@@ -51,7 +52,8 @@ RUN . ansible-venv/bin/activate && \
 # Install the required collections
 RUN . ansible-venv/bin/activate && \
     ansible-galaxy collection install community.general && \
-    ansible-galaxy collection install amazon.aws
+    ansible-galaxy collection install amazon.aws && \
+    ansible-galaxy collection install ansible.utils
 
 # Set the working directory
 WORKDIR /etc/ansible

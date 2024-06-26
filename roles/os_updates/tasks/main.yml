@@ -1,4 +1,8 @@
 ---
+- name: Print ansible_host
+  ansible.builtin.debug:
+    msg: "ansible_host is {{ ansible_host }}"
+
 - name: Check OS type
   ansible.builtin.include_tasks: "{{ ansible_os_family }}_update.yml"
   vars:
