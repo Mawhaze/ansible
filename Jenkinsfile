@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
- stage('Build Docker Image') {
+    stage('Build Docker Image') {
             steps {
                 script {
                     // Use withCredentials to securely handle SSH keys
