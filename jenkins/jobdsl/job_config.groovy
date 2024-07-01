@@ -98,16 +98,16 @@ pipelineJob('docker/build/ansible_docker') {
       scm {
         git {
           remote {
-            url('https://github.com/mawhaze/ansible.git') // Replace with your repository URL
-            credentials('github_credentials') // Optional: Specify if the repo is private
+            url('https://github.com/mawhaze/ansible.git')
+            credentials('github_access_token')
           }
-          branches('*/main') // Replace 'main' with your branch name if different
-          scriptPath('Jenkinsfile') // Path to your Jenkinsfile within the repository
+          branches('*/main')
+          scriptPath('Jenkinsfile')
         }
       }
     }
   }
   triggers {
-    scm('H/15 * * * *') // Poll SCM every 15 minutes. Adjust as needed.
+    scm('H/15 * * * *') // Poll SCM every 15 minutes.
   }
 }
