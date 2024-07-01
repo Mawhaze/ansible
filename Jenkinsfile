@@ -11,7 +11,7 @@ pipeline {
 
     triggers {
         // Trigger the pipeline on a push to the GitHub branch
-        pollSCM(H/15 * * * *)
+        pollSCM('H/15 * * * *')
     }
 
     stages {
