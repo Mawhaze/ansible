@@ -1,18 +1,6 @@
 // Create the Ansible folder and job structure
-folder('ansible') {
-  description('Ansible jobs')
-}
-
 folder('ansible/playbooks') {
   description('Ansible playbook jobs')
-}
-// Create the Docker jobs for ansible
-folder('docker') {
-  description('Docker jobs')
-}
-
-folder('docker/build') {
-  description('Docker build jobs')
 }
 
 // Ansible job definitions
