@@ -11,8 +11,8 @@ job('root-dsl-seed') {
         name('origin')
       }
       branch('main')
+      credentialsId('github_credentials')
     }
-    credentialsId('github_credentials')
   }
   triggers {
     scm('H/5 * * * *')
