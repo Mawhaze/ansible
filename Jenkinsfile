@@ -34,7 +34,7 @@ pipeline {
                         sh """
                         echo "Using SSH_PUBLIC_KEY from \$SSH_PUBLIC_KEY"
                         echo \$SSH_PUBLIC_KEY > ssh_public_key.tmp
-                        docker build --build-arg SSH_PRIVATE_KEY=\$(cat \$SSH_PRIVATE_KEY) --build-arg SSH_PUBLIC_KEY=\$(cat ssh_public_key.tmp) -t ${IMAGE_NAME}:latest .
+                        docker build --build-arg SSH_PRIVATE_KEY='\$(cat \$SSH_PRIVATE_KEY)' --build-arg SSH_PUBLIC_KEY='\$(cat ssh_public_key.tmp)' -t ${IMAGE_NAME}:latest .
                         rm ssh_public_key.tmp
                         """
                     }
@@ -47,7 +47,8 @@ pipeline {
                 script {
                     // Use withCredentials to securely handle DockerHub login
                     withCredentials([
-                        usernamePassword(credentialsId: 'dockerhub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')
+                        string(credentialsId: 'dockerhub_username')
+                        string(credentialsId: 'dockerhub_password')
                     ]) {
                         // Login to DockerHub
                         sh 'echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin'
