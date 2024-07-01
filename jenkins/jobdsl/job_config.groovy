@@ -82,6 +82,6 @@ pipelineJob('docker/build/ansible_docker') {
     }
   }
   triggers {
-    scm('H/15 * * * *') // Poll SCM every 15 minutes.
+    scm('*/15 * * * *') // Poll SCM every 15 minutes.
   }
 }
