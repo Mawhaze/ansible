@@ -34,7 +34,7 @@ pipeline {
                         sh """
                         echo "Using SSH_PUBLIC_KEY from \$SSH_PUBLIC_KEY"
                         echo \$SSH_PUBLIC_KEY > ssh_public_key.tmp
-                        docker build --build-arg SSH_PRIVATE_KEY='\$(cat \$SSH_PRIVATE_KEY)' --build-arg SSH_PUBLIC_KEY='\$(cat ssh_public_key.tmp)' -t ${IMAGE_NAME}:latest .
+                        docker build --build-arg SSH_PRIVATE_KEY="\$(cat \$SSH_PRIVATE_KEY)" --build-arg SSH_PUBLIC_KEY="\$(cat ssh_public_key.tmp)" -t ${IMAGE_NAME}:latest .
                         rm ssh_public_key.tmp
                         """
                     }
