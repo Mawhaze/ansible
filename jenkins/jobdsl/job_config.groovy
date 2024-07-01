@@ -8,10 +8,10 @@ job('root-dsl-seed') {
     git {
       remote {
         url('https://github.com/Mawhaze/ansible.git')
+        credentialsId('github_credentials')
         name('origin')
       }
       branch('main')
-      credentialsId('github_credentials')
     }
   }
   triggers {
