@@ -1,29 +1,3 @@
-// Create the root dsl seed job
-// job('root-dsl-seed') {
-//   description('Seed job for creating Jenkins jobs from DSL')
-//   logRotator {
-//     numToKeep(10)
-//   }
-//   scm {
-//     git {
-//       remote {
-//         url('https://github.com/Mawhaze/ansible.git')
-//         credentialsId('github_credentials')
-//         name('origin')
-//       }
-//       branch('main')
-//     }
-//   }
-//   triggers {
-//     scm('H/5 * * * *')
-//   }
-//   steps {
-//     dsl {
-//       external('ansible/jenkins/jobdsl/job_config.groovy')
-//     }
-//   }
-// }
-
 // Create the Ansible folder and job structure
 folder('ansible') {
   description('Ansible jobs')
@@ -101,7 +75,7 @@ pipelineJob('docker/build/ansible_docker') {
             url('https://github.com/mawhaze/ansible.git')
             credentials('github_access_token')
           }
-          branches('*/main')
+          branches('*/master')
           scriptPath('Jenkinsfile')
         }
       }
