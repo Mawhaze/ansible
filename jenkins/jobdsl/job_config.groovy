@@ -11,6 +11,7 @@ job('root-dsl-seed') {
         name('origin')
       }
       branch('main')
+      credentialsId('github_credentials')
     }
   }
   triggers {
@@ -21,6 +22,7 @@ job('root-dsl-seed') {
       external('ansible/jenkins/jobdsl/job_config.groovy')
     }
   }
+}
 
 // Create the Ansible folder and job structure
 folder('ansible') {
@@ -30,7 +32,16 @@ folder('ansible') {
 folder('ansible/playbooks') {
   description('Ansible playbook jobs')
 }
+// Create the Docker jobs for ansible
+folder('docker') {
+  description('Docker jobs')
+}
 
+folder('docker/build') {
+  description('Docker build jobs')
+}
+
+// Ansible job definitions
 // Define the ubuntu_os_updates pipeline job within the ansible folder
   pipelineJob('ansible/playbooks/ubuntu_os_updates') {
     definition {
@@ -77,4 +88,3 @@ pipeline {
       }
     }
   }
-}
