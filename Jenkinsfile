@@ -2,15 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Define DockerHub credentials
-        DOCKERHUB_USERNAME = credentials('dockerhub_username')
-        DOCKERHUB_PASSWORD = credentials('dockerhub_password')
         // Define the Docker image name
         IMAGE_NAME = "mawhaze/ansible"
-        // Add sa-ansible keys
-        SSH_PRIVATE_KEY = credentials('ansible_private_ssh_key')
-        SSH_PUBLIC_KEY = credentials('ansible_public_ssh_key')
-
     }
 
     triggers {
@@ -26,29 +19,35 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+ stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image
-                    sh "docker build -t ${IMAGE_NAME}:latest ."
+                    // Use withCredentials to securely handle SSH keys
+                    withCredentials([
+                        sshUserPrivateKey(credentialsId: 'ansible_private_ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY'),
+                        string(credentialsId: 'ansible_public_ssh_key', variable: 'SSH_PUBLIC_KEY')
+                    ]) {
+                        // Build the Docker image, passing SSH keys as build args
+                        sh "docker build --build-arg SSH_PRIVATE_KEY=\$(cat \$SSH_PRIVATE_KEY) --build-arg SSH_PUBLIC_KEY=\$SSH_PUBLIC_KEY -t ${IMAGE_NAME}:latest ."
+                    }
                 }
             }
         }
 
-        stage('Docker Login') {
+        stage('Docker Login and Push') {
             steps {
                 script {
-                    // Login to DockerHub
-                    sh('echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin')
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // Push the Docker image to DockerHub
-                    sh "docker push ${IMAGE_NAME}:latest"
+                    // Use withCredentials to securely handle DockerHub login
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')
+                    ]) {
+                        // Login to DockerHub
+                        sh 'echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin'
+                        // Push the Docker image to DockerHub
+                        sh "docker push ${IMAGE_NAME}:latest"
+                        // Logout from DockerHub
+                        sh "docker logout"
+                    }
                 }
             }
         }
