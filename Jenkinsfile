@@ -47,7 +47,7 @@ pipeline {
                 script {
                     // Use withCredentials to securely handle DockerHub login
                     withCredentials([
-                        string(credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME')
+                        string(credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'),
                         string(credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD')
                     ]) {
                         // Login to DockerHub
