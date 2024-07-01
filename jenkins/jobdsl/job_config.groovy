@@ -44,8 +44,8 @@ pipeline {
             steps {
                 // Correctly inject credentials
                 withCredentials([
-                    [$class: 'StringBinding', credentialsId: 'sa_ansible_aws_access_key_id', variable: 'AWS_ACCESS_KEY_ID'],
-                    [$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY']
+                    [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_access_key_id', variable: 'AWS_ACCESS_KEY_ID'],
+                    [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY']
                 ]) {
                     script {
                         echo "Credentials are set up."
