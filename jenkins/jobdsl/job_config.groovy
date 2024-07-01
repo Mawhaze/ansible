@@ -5,7 +5,13 @@ job('root-dsl-seed') {
     numToKeep(10)
   }
   scm {
-    git {'https://github.com/Mawhaze/ansible.git', 'main'}
+    git {
+      remote {
+        url('https://github.com/Mawhaze/ansible.git')
+        name('origin')
+      }
+      branch('main')
+    }
   }
   triggers {
     scm('H/5 * * * *')
