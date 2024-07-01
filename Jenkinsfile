@@ -7,6 +7,10 @@ pipeline {
         DOCKERHUB_PASSWORD = credentials('dockerhub_password')
         // Define the Docker image name
         IMAGE_NAME = "mawhaze/ansible"
+        // Add sa-ansible keys
+        SSH_PRIVATE_KEY = credentials('ansible_private_ssh_key')
+        SSH_PUBLIC_KEY = credentials('ansible_public_ssh_key')
+
     }
 
     triggers {

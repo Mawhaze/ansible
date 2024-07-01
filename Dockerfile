@@ -17,14 +17,18 @@ RUN useradd -m -s /bin/bash sa-ansible
 # Set working directory to sa-ansible home
 WORKDIR /home/sa-ansible
 
-# Replace COPY with mounting creds from host
-COPY test-creds/ansible_ed25519 /home/sa-ansible/.ssh/id_ed25519
-COPY test-creds/ansible_ed25519.pub /home/sa-ansible/.ssh/id_ed25519.pub
+# Accept SSH keys as build arguments
+ARG SSH_PRIVATE_KEY
+ARG SSH_PUBLIC_KEY
 
-# Set permissions on SSH keys
-RUN chown -R sa-ansible:sa-ansible /home/sa-ansible/.ssh && \
-    chmod 600 /home/sa-ansible/.ssh/id_ed25519 && \
-    chmod 644 /home/sa-ansible/.ssh/id_ed25519.pub
+# Create SSH directory and write keys to files
+RUN mkdir .ssh && \
+    echo "$SSH_PRIVATE_KEY" > .ssh/id_ed25519 && \
+    echo "$SSH_PUBLIC_KEY" > .ssh/id_ed25519.pub && \
+    chown -R sa-ansible:sa-ansible .ssh && \
+    chmod 600 .ssh/id_ed25519 && \
+    chmod 644 .ssh/id_ed25519.pub && \
+    echo "Host *\n\tStrictHostKeyChecking no\n" > .ssh/config
 
 # Configure SSH
 RUN echo "Host *\n\tStrictHostKeyChecking no\n" >> /home/sa-ansible/.ssh/config
