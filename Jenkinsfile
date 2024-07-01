@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         // Define DockerHub credentials
-        DOCKERHUB_USERNAME = credentials('dockerhub-username')
-        DOCKERHUB_PASSWORD = credentials('dockerhub-password')
+        DOCKERHUB_USERNAME = credentials('dockerhub_username')
+        DOCKERHUB_PASSWORD = credentials('dockerhub_password')
         // Define the Docker image name
         IMAGE_NAME = "mawhaze/ansible"
     }
