@@ -88,3 +88,26 @@ pipeline {
       }
     }
   }
+
+// Docker jobs for Ansible definitions
+// Define the ansible_docker build job within the docker/build folder
+pipelineJob('docker/build/ansible_docker') {
+  description('Build the Ansible Docker image from a Jenkinsfile')
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url('https://github.com/mawhaze/ansible.git') // Replace with your repository URL
+            credentials('github_credentials') // Optional: Specify if the repo is private
+          }
+          branches('*/main') // Replace 'main' with your branch name if different
+          scriptPath('Jenkinsfile') // Path to your Jenkinsfile within the repository
+        }
+      }
+    }
+  }
+  triggers {
+    scm('H/15 * * * *') // Poll SCM every 15 minutes. Adjust as needed.
+  }
+}
