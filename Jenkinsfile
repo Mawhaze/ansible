@@ -49,7 +49,7 @@ pipeline {
 
                         // Execute the docker build command with secrets, using temporary file paths
                         sh """
-                        docker buildx build --progress=plain \
+                        docker buildx build --no-cache --progress=plain \
                         --secret id=ssh_private_key,src=ssh_private_key.tmp \
                         --secret id=ssh_public_key,src=ssh_public_key.tmp \
                         -t ${env.IMAGE_NAME}:latest .
