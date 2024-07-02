@@ -36,6 +36,14 @@ pipeline {
                     }
                 }
             }
+        stage('Debug Credentials') {
+            steps {
+                script {
+                    // Debug credentials
+                    echo "AWS_ACCESS_KEY_ID: \${env.AWS_ACCESS_KEY_ID}"
+                }
+            }
+        }
         stage('Run Ansible Playbook') {
             steps {
                 script {
