@@ -1,12 +1,21 @@
 # Ansible Readme
 
-## Next to do
+## Current State
 
-- Initial tests worked, job execution to jenkins
-  - pull in aws creds at runtime
-  - mount volume for .ssh
+- Rebuilding the homelab ansible environment with dynamic inventories and roles
+- All playbooks will be ran via jenkins and configured in ./jenkins/jobdsl/job_config.groovy
+  - This includes docker build jobs for ansible.
 
 ## Playbooks to make
 
 - Docker
   - maintenance - updates, image cleanup, etc.
+  - build job for ansible
+
+- Proxmox
+  - maintenance
+  - 
+
+## Where I left off
+
+- EOD
