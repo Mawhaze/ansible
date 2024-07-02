@@ -45,7 +45,7 @@ pipeline {
                         sh "echo \${SSH_PUBLIC_KEY} > ssh_public_key.tmp"
                         writeFile file: 'ssh_private_key.tmp', text: env.SSH_PRIVATE_KEY, encoding: 'UTF-8'
 
-                        echo "Running docker build command with SSH keys..."
+                        echo "Running docker build command with SSH key files..."
 
                         // Execute the docker build command with secrets, using temporary file paths
                         sh """
