@@ -19,8 +19,6 @@ pipeline {
                 withCredentials([
                     [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_access_key_id', variable: 'AWS_ACCESS_KEY_ID'],
                     [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY'],
-                    [\$class: 'StringBinding', credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'],
-                    [\$class: 'StringBinding', credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD']
                 ]) {
                     script {
                         echo "Credentials are set up."
@@ -41,14 +39,24 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 script {
-                    // Run Docker command to execute Ansible playbook
-                    docker.image('mawhaze/ansible:latest').inside("-e AWS_ACCESS_KEY_ID=\${env.AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=\${env.AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=us-west-2") {
-                        sh "ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/updates/os_updates.yml -vvv"
-                    }
-                }
+                    try {
+                        // Check if Docker is accessible
+                        sh "docker info"
+                        
+                        // Pull the Docker image to ensure it's available locally
+                        sh "docker pull mawhaze/ansible:latest"
+                        
+                        // Run Docker command to execute Ansible playbook
+                        docker.image('mawhaze/ansible:latest').inside("-e AWS_ACCESS_KEY_ID=\${env.AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=\${env.AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=us-west-2") {
+                            sh "ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/updates/os_updates.yml -vvv"
+                        }
+                    } catch (Exception e) {
+                        echo "Failed to run the Ansible playbook inside Docker container: ${e.getMessage()}"
+                        throw e // Re-throw the exception to fail the stage
             }
         }
     }
+}
 }
         """)
       }
