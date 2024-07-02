@@ -31,7 +31,7 @@ pipeline {
                 script {
                     // Sign into DockerHub using injected credentials
                     withCredentials([
-                        [$clas: 'StringBinding', credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'],
+                        [$class: 'StringBinding', credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'],
                         [$class: 'StringBinding', credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD']
                     ]) {
                         docker.withRegistry('https://index.docker.io/v1/', '', "docker login --username \$DOCKERHUB_USERNAME --password \$DOCKERHUB_PASSWORD") {
