@@ -8,7 +8,7 @@ want_proxmox_nodes_ansible_host: false
 filters:
   - proxmox_status == "running"
 compose:
-  ansible_host: "'{{ proxmox_name }}.mawhaze.local'"
+  ansible_host: "'{{ proxmox_name }}.mawhaze.dev'"
 keyed_groups:
   - key: proxmox_tags_parsed
 groups:
