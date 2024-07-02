@@ -45,7 +45,7 @@ pipeline {
 
                         // Execute the docker build command with secrets
                         sh """
-                        docker buildx build --no-cache --progress=plain \
+                        docker buildx build --progress=plain \
                         --secret id=ssh_private_key,src=\${SSH_PRIVATE_KEY} \
                         --secret id=ssh_public_key,src=\${SSH_PUBLIC_KEY} \
                         -t ${env.IMAGE_NAME}:latest .
