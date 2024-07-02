@@ -41,20 +41,22 @@ pipeline {
                         sshUserPrivateKey(credentialsId: 'ansible_private_ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY'),
                         string(credentialsId: 'ansible_public_ssh_key', variable: 'SSH_PUBLIC_KEY')
                     ]) {
-                        // Write the SSH public key content to a temporary file
+                        // Write the SSH key content to a temporary file
                         sh "echo \${SSH_PUBLIC_KEY} > ssh_public_key.tmp"
-                        
+                        sh "echo \${SSH_PRIVATE_KEY} > ssh_private_key.tmp"
+
                         echo "Running docker build command with SSH keys..."
 
                         // Execute the docker build command with secrets, using temporary file paths
                         sh """
                         docker buildx build --progress=plain \
-                        --secret id=ssh_private_key,src=\${SSH_PRIVATE_KEY} \
+                        --secret id=ssh_private_key,src=ssh_private_key.tmp \
                         --secret id=ssh_public_key,src=ssh_public_key.tmp \
                         -t ${env.IMAGE_NAME}:latest .
                         """
                         // Clean up the temporary SSH public key file
                         sh "rm -f ssh_public_key.tmp"
+                        sh "rm -f ssh_private_key.tmp"
                             }
                 }
             }
