@@ -4,6 +4,8 @@ pipeline {
     environment {
         // Define the Docker image name
         IMAGE_NAME = "mawhaze/ansible"
+        // Enable Docker BuildKit
+        DOCKER_BUILDKIT = 1
     }
 
     triggers {
@@ -26,9 +28,7 @@ pipeline {
                         sshUserPrivateKey(credentialsId: 'ansible_private_ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY'),
                         string(credentialsId: 'ansible_public_ssh_key', variable: 'SSH_PUBLIC_KEY')
                     ]) {
-                        // Enable docker buildkit
                         echo "Running docker build command with SSH keys..."
-                        sh 'export DOCKER_BUILDKIT=1'
 
                         // Execute the docker build command with secrets
                         sh """
