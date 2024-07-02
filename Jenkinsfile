@@ -42,10 +42,13 @@ pipeline {
                         string(credentialsId: 'ansible_public_ssh_key', variable: 'SSH_PUBLIC_KEY')
                     ]) {
                         echo "Running docker build command with SSH keys..."
+                        // Debug - only enable while debugging
+                        echo "SSH_PRIVATE_KEY=$SSH_PRIVATE_KEY"
+                        echo "SSH_PUBLIC_KEY=$SSH_PUBLIC_KEY"
 
                         // Execute the docker build command with secrets
                         sh """
-                        docker buildx build --progress=plain \
+                        docker build --progress=plain \
                         --secret id=ssh_private_key,src=\${SSH_PRIVATE_KEY} \
                         --secret id=ssh_public_key,src=\${SSH_PUBLIC_KEY} \
                         -t ${env.IMAGE_NAME}:latest .
