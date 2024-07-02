@@ -18,7 +18,9 @@ pipeline {
                 // Correctly inject credentials
                 withCredentials([
                     [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_access_key_id', variable: 'AWS_ACCESS_KEY_ID'],
-                    [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY']
+                    [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY'],
+                    [\$class: 'StringBinding', credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'],
+                    [\$class: 'StringBinding', credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD']
                 ]) {
                     script {
                         echo "Credentials are set up."
@@ -30,8 +32,7 @@ pipeline {
             steps {
                 // Sign into DockerHub using injected credentials
                 withCredentials([
-                    [$class: 'StringBinding', credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'],
-                    [$class: 'StringBinding', credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD']
+
                 ]) {
                 script {
                         docker.withRegistry('https://index.docker.io/v1/', '', "docker login --username \$DOCKERHUB_USERNAME --password \$DOCKERHUB_PASSWORD") {
