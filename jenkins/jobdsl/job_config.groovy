@@ -30,10 +30,6 @@ pipeline {
         }
         stage('Sign into DockerHub and Pull Docker Image') {
             steps {
-                // Sign into DockerHub using injected credentials
-                withCredentials([
-
-                ]) {
                 script {
                         docker.withRegistry('https://index.docker.io/v1/', '', "docker login --username \$DOCKERHUB_USERNAME --password \$DOCKERHUB_PASSWORD") {
                             // Pull the Docker image from DockerHub before running it
