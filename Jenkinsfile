@@ -42,7 +42,7 @@ pipeline {
                         string(credentialsId: 'ansible_public_ssh_key', variable: 'SSH_PUBLIC_KEY')
                     ]) {
                         // Write the SSH public key content to a temporary file
-                        sh "echo "$SSH_PUBLIC_KEY" > ssh_public_key.tmp"
+                        sh "echo \${SSH_PUBLIC_KEY} > ssh_public_key.tmp"
                         
                         echo "Running docker build command with SSH keys..."
 
