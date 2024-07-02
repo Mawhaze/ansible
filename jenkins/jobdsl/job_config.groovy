@@ -31,7 +31,7 @@ pipeline {
         stage('Sign into DockerHub and Pull Docker Image') {
             steps {
                 script {
-                        docker.withRegistry('https://index.docker.io/v1/', '', "docker login --username \$DOCKERHUB_USERNAME --password \$DOCKERHUB_PASSWORD") {
+                        docker.withRegistry('https://index.docker.io/v1/', '', "docker login --username \${env.DOCKERHUB_USERNAME} --password \${env.DOCKERHUB_PASSWORD}") {
                             // Pull the Docker image from DockerHub before running it
                             sh "docker pull mawhaze/ansible:latest"
                         }
