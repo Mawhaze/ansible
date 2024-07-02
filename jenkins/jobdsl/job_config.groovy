@@ -29,10 +29,15 @@ pipeline {
         stage('Sign into DockerHub and Pull Docker Image') {
             steps {
                 script {
-                    // Sign into DockerHub
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub_credentials') {
-                        // Pull the Docker image from DockerHub before running it
-                        sh "docker pull mawhaze/ansible:latest"
+                    // Sign into DockerHub using injected credentials
+                    withCredentials([
+                        string(credentialsId: 'dockerhub_username', variable: 'DOCKERHUB_USERNAME'),
+                        string(credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD')
+                    ]) {
+                        docker.withRegistry('https://index.docker.io/v1/', '', "docker login --username \$DOCKERHUB_USERNAME --password \$DOCKERHUB_PASSWORD") {
+                            // Pull the Docker image from DockerHub before running it
+                            sh "docker pull mawhaze/ansible:latest"
+                        }
                     }
                 }
             }
