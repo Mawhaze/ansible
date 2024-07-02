@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update and install software-properties-common to add PPAs, then install Ansible dependencies
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y software-properties-common python3-pip python3-venv openssh-client && \
+    apt-get install -y software-properties-common python3-pip python3-venv openssh-client vim && \
     apt-add-repository --yes --update ppa:ansible/ansible && \
     apt-get update && \
     apt-get install -y ansible
@@ -17,21 +17,23 @@ RUN useradd -m -s /bin/bash sa-ansible
 # Set working directory to sa-ansible home
 WORKDIR /home/sa-ansible
 
-# Accept SSH keys as build arguments
-ARG SSH_PRIVATE_KEY
-ARG SSH_PUBLIC_KEY
-
-# Create SSH directory and write keys to files
+# Create SSH directory and adjust permissions
 RUN mkdir .ssh && \
-    echo "$SSH_PRIVATE_KEY" > .ssh/id_ed25519 && \
-    echo "$SSH_PUBLIC_KEY" > .ssh/id_ed25519.pub && \
     chown -R sa-ansible:sa-ansible .ssh && \
-    chmod 600 .ssh/id_ed25519 && \
-    chmod 644 .ssh/id_ed25519.pub && \
-    echo "Host *\n\tStrictHostKeyChecking no\n" > .ssh/config
+    chmod 700 .ssh
 
-# Configure SSH
-RUN echo "Host *\n\tStrictHostKeyChecking no\n" >> /home/sa-ansible/.ssh/config
+# Use Docker secrets to handle SSH keys securely
+# Note: Dockerfile must be used with Docker BuildKit for --mount to work
+RUN --mount=type=secret,id=ssh_private_key \
+    echo "$(cat /run/secrets/ssh_private_key)" > .ssh/id_ed25519 && \
+    chmod 600 .ssh/id_ed25519
+
+RUN --mount=type=secret,id=ssh_public_key \
+    echo "$(cat /run/secrets/ssh_public_key)" > .ssh/id_ed25519.pub && \
+    chmod 644 .ssh/id_ed25519.pub
+
+RUN echo "Host *\n\tStrictHostKeyChecking no\n" > .ssh/config && \
+    chown -R sa-ansible:sa-ansible .ssh
 
 # Copy in required files
 COPY ./ansible.cfg /etc/ansible/ansible.cfg
