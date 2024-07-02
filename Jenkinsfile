@@ -21,6 +21,19 @@ pipeline {
             }
         }
 
+        stage('Pre-Build Debug') {
+            steps {
+                script {
+                    // Print Docker version to ensure compatibility
+                    sh "docker --version"
+                    // Check if DOCKER_BUILDKIT is enabled in the environment
+                    sh "echo DOCKER_BUILDKIT=$DOCKER_BUILDKIT"
+                    // Optionally, print Docker info for more detailed debugging
+                    sh "docker info"
+                }
+            }
+        }
+        
         stage('Build Docker Image') {
             steps {
                 script {
