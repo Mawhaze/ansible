@@ -23,6 +23,7 @@ pipeline {
                     }
                 }
             }
+        }
         stage('Run Ansible Playbook') {
             steps {
                 // Inject credentials into the Docker container
@@ -32,9 +33,10 @@ pipeline {
                     ]) {
                     script {
                         // Run Docker command to execute Ansible playbook
-                        docker.image('mawhaze/ansible:latest').inside("-e AWS_ACCESS_KEY_ID=\${env.AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=\${env.AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=us-west-2") {
-                            sh "ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/updates/os_updates.yml -vvv"
-                      }
+                        sh "docker run -e AWS_ACCESS_KEY_ID=\${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=\${AWS_SECRET_ACCESS_KEY} \
+                            mawhaze/ansible:latest ansible-playbook -i /etc/ansible/inventories/inventory.ubuntu.yml \
+                            /etc/ansible/playbooks/updates/os_updates.yml -vvv"
+                    }
                 }
             }
         }
