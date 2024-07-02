@@ -13,19 +13,6 @@ folder('ansible/playbooks') {
 pipeline {
     agent any
     stages {
-        stage('Setup Credentials') {
-            steps {
-                // Correctly inject credentials
-                withCredentials([
-                    [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_access_key_id', variable: 'AWS_ACCESS_KEY_ID'],
-                    [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY'],
-                ]) {
-                    script {
-                        echo "Credentials are set up."
-                    }
-                }
-            }
-        }
         stage('Sign into DockerHub and Pull Docker Image') {
             steps {
                 script {
@@ -36,17 +23,16 @@ pipeline {
                     }
                 }
             }
-        stage('Debug Credentials') {
-            steps {
-                script {
-                    // Debug credentials
-                    echo "AWS_ACCESS_KEY_ID: \${env.AWS_ACCESS_KEY_ID}"
-                }
-            }
-        }
         stage('Run Ansible Playbook') {
             steps {
                 script {
+                    // Inject credentials
+                    withCredentials([
+                        [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_access_key_id', variable: 'AWS_ACCESS_KEY_ID'],
+                        [\$class: 'StringBinding', credentialsId: 'sa_ansible_aws_secret_access_key', variable: 'AWS_SECRET_ACCESS_KEY'],
+                    ]) {
+                    script {
+                        echo "Credentials are set up."
                     // Run Docker command to execute Ansible playbook
                     docker.image('mawhaze/ansible:latest').inside("-e AWS_ACCESS_KEY_ID=\${env.AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=\${env.AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=us-west-2") {
                         sh "ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/updates/os_updates.yml -vvv"
