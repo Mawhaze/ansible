@@ -18,4 +18,4 @@
 
 ## Where I left off
 
-- EOD
+- EOD - continue working on deploying ansible private key
