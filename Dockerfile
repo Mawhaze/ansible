@@ -25,7 +25,7 @@ RUN mkdir .ssh && \
 # Use Docker secrets to handle SSH keys securely
 # Note: Dockerfile must be used with Docker BuildKit for --mount to work
 RUN --mount=type=secret,id=ssh_private_key \
-    cp /run/secrets/ssh_private_key > .ssh/id_ed25519 && \
+    cp /run/secrets/ssh_private_key /home/sa-ansible/.ssh/id_ed25519 && \
     chmod 600 .ssh/id_ed25519
 
 RUN --mount=type=secret,id=ssh_public_key \
