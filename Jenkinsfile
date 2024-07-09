@@ -43,20 +43,20 @@ pipeline {
                     ]) {
                         // Write the SSH key content to a temporary file
                         sh "echo \${SSH_PUBLIC_KEY} > ssh_public_key.tmp"
-                        writeFile file: 'ssh_private_key.tmp', text: env.SSH_PRIVATE_KEY
+                        // writeFile file: 'ssh_private_key.tmp', text: env.SSH_PRIVATE_KEY
 
                         echo "Running docker build command with SSH key files..."
 
                         // Execute the docker build command with secrets, using temporary file paths
                         sh """
                         docker buildx build --no-cache --progress=plain \
-                        --secret id=ssh_private_key,src=ssh_private_key.tmp \
+                        --secret id=ssh_private_key,src=\${SSH_PRIVATE_KEY} \
                         --secret id=ssh_public_key,src=ssh_public_key.tmp \
                         -t ${env.IMAGE_NAME}:latest .
                         """
                         // Clean up the temporary SSH public key file
                         sh "rm -f ssh_public_key.tmp"
-                        sh "rm -f ssh_private_key.tmp"
+                        // sh "rm -f ssh_private_key.tmp"
                             }
                 }
             }
