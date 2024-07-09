@@ -3,6 +3,7 @@
 - name: Filtering for Ubuntu hosts
   hosts: os_ubuntu
   gather_facts: yes
+  remote_user: sa-ansible
 
   roles:
     - os_updates
