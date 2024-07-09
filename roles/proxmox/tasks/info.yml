@@ -1,7 +1,7 @@
 ---
 - name: Get node info
   community.general.proxmox_node_info:
-    api_user: sa-ansible@pve
+    api_user: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-user', region='us-west-2', decrypt='true') }}"
     api_password: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-password', region='us-west-2', decrypt='true') }}"
     api_host: https://10.10.10.10
     api_port: 8006

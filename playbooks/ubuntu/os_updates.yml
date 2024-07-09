@@ -1,6 +1,6 @@
 ---
-# Run a play against proxmox_all_running hosts and gather facts
-- name: Filtering for Ubuntu hosts
+# Run the os_updates role against os_ubuntu hosts
+- name: Package Updates on Ubuntu hosts
   hosts: os_ubuntu
   gather_facts: yes
   remote_user: sa-ansible
