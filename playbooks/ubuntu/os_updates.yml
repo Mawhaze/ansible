@@ -4,6 +4,7 @@
   hosts: os_ubuntu
   gather_facts: yes
   remote_user: sa-ansible
+  become: yes
 
   roles:
     - os_updates
