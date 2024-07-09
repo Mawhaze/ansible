@@ -23,7 +23,6 @@ RUN mkdir .ssh && \
     chmod 700 .ssh
 
 # Use Docker secrets to handle SSH keys securely
-# Note: Dockerfile must be used with Docker BuildKit for --mount to work
 RUN --mount=type=secret,id=ssh_private_key \
     echo "$(cat /run/secrets/ssh_private_key)" > .ssh/id_ed25519 && \
     chmod 600 .ssh/id_ed25519
@@ -50,12 +49,12 @@ USER sa-ansible
 # Create a virtual environment for Ansible under the sa-ansible user's home directory
 RUN python3 -m venv ansible-venv
 
-# Activate the virtual environment and install Ansible, boto3, botocore
+# Activate the virtual environment and install Pip packages
 RUN . ansible-venv/bin/activate && \
     pip install --upgrade pip && \
     pip install ansible boto3 botocore proxmoxer requests
 
-# Install the required collections
+# Install the required ansible galaxy collections
 RUN . ansible-venv/bin/activate && \
     ansible-galaxy collection install community.general && \
     ansible-galaxy collection install amazon.aws && \

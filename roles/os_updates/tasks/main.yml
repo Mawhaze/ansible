@@ -3,11 +3,17 @@
   ansible.builtin.debug:
     msg: "ansible_host is {{ ansible_host }}"
 
-- name: Check OS type
-  ansible.builtin.include_tasks: "{{ ansible_os_family }}_update.yml"
-  vars:
-    ansible_os_family: "{{ ansible_facts['os_family'] | lower }}"
-  when: ansible_os_family in ['ubuntu', 'debian', 'windows']
+- name: Check OS type for Ubuntu
+  ansible.builtin.include_tasks: "ubuntu_update.yml"
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: Check OS type for other Debian-based systems
+  ansible.builtin.include_tasks: "debian_update.yml"
+  when: ansible_facts['distribution'] != "Ubuntu" and ansible_facts['os_family'] == "Debian"
+
+- name: Check OS type for Windows
+  ansible.builtin.include_tasks: "windows_update.yml"
+  when: ansible_facts['os_family'] == "Windows"
 
 - name: Fallback for unsupported OS
   ansible.builtin.fail:
