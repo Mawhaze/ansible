@@ -14,7 +14,11 @@
 
 - Proxmox
   - maintenance
-  - 
+  - node level updates
+
+- Ubuntu
+  - Change the update play to flag the VM with `reboot`
+  - build a reboot play that runs nightly looking for hosts tagged `reboot`
 
 ## Where I left off
 

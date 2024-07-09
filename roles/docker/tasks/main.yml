@@ -1,0 +1,13 @@
+---
+- name: Validate Docker hosts
+  hosts: os_ubuntu
+  become: yes
+  tasks:
+    - name: Ensure Docker service exists
+      ansible.builtin.service:
+        name: docker
+      register: docker_service_info
+
+    - name: Check for container updates
+      ansible.builtin.include_tasks: container_updates.yml
+      when: docker_service_info.exists 

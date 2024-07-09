@@ -4,7 +4,8 @@ folder('ansible/playbooks') {
 }
 
 // Ansible job definitions
-// Define the ubuntu_os_updates pipeline job within the ansible folder
+// Keep this alphabetical for easier maintenance
+// Define the ubuntu_os_updates
 pipelineJob('ansible/playbooks/ubuntu_os_updates') {
   definition {
     cps {
@@ -32,7 +33,7 @@ pipeline {
                   sh(
                       'docker run -e AWS_ACCESS_KEY_ID=\$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=\$AWS_SECRET_ACCESS_KEY \
                       mawhaze/ansible:latest \
-                      ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/updates/os_updates.yml'
+                      ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/ubuntu/os_updates.yml'
                   )
               }
           }
