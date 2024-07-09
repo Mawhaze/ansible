@@ -15,6 +15,14 @@
     msg: "{{ upgradable_packages.stdout | default('No upgradable packages found or task did not run.') }}"
   when: upgradable_packages is defined
 
+- name: Wait for other apt processes to finish
+  ansible.builtin.shell: |
+    while pgrep -af apt; do
+      echo "Waiting for other apt processes to finish..."
+      sleep 10
+    done
+  changed_when: false
+  
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: safe
