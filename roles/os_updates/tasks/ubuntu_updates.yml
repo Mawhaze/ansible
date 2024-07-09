@@ -12,8 +12,8 @@
 
 - name: DEBUG - Print available upgrades
   ansible.builtin.debug:
-    msg: "{{ upgradable_packages.stdout }}"
-  when: upgradable_packages is defined && apt_updates.changed or apt_updates.cache_updated
+    msg: "{{ upgradable_packages.stdout | default('No upgradable packages found or task did not run.') }}"
+  when: upgradable_packages is defined
 
 - name: Upgrade all packages
   ansible.builtin.apt:
