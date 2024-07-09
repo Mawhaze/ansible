@@ -13,12 +13,12 @@
 - name: DEBUG - Print available upgrades
   ansible.builtin.debug:
     msg: "{{ upgradable_packages.stdout }}"
-  when: apt_updates.packages | length > 0
+  when: upgradable_packackes is defined
 
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: safe
-  when: apt_updates.packages | length > 0
+  when: upgradable_packackes is defined
   register: apt_upgrade
 
 - name: Check if reboot is required
