@@ -17,7 +17,7 @@
   
 - name: Upgrade all packages
   ansible.builtin.apt:
-    upgrade: safe
+    upgrade: dist
   when: upgradable_packages is defined
 
 - name: Check if reboot is required
