@@ -4,15 +4,15 @@
     msg: "ansible_host is {{ ansible_host }}"
 
 - name: Check OS type for Ubuntu
-  ansible.builtin.include_tasks: "ubuntu_update.yml"
+  ansible.builtin.include_tasks: "ubuntu_updates.yml"
   when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: Check OS type for other Debian-based systems
-  ansible.builtin.include_tasks: "debian_update.yml"
+  ansible.builtin.include_tasks: "debian_updates.yml"
   when: ansible_facts['distribution'] != "Ubuntu" and ansible_facts['os_family'] == "Debian"
 
 - name: Check OS type for Windows
-  ansible.builtin.include_tasks: "windows_update.yml"
+  ansible.builtin.include_tasks: "windows_updates.yml"
   when: ansible_facts['os_family'] == "Windows"
 
 - name: Fallback for unsupported OS
