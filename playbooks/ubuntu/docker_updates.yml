@@ -1,0 +1,10 @@
+---
+# Run the docker role against os_ubuntu hosts
+- name: Filtering for Ubuntu hosts
+  hosts: os_ubuntu
+  gather_facts: yes
+  remote_user: sa-ansible
+  become: yes
+
+  roles:
+    - docker

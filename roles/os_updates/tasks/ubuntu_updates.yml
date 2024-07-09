@@ -4,13 +4,15 @@
     update_cache: yes
   register: apt_updates
 
-- name: Print number of packages that can be upgraded
-  ansible.builtin.debug:
-    msg: "{{ apt_updates.packages | length }} packages can be upgraded."
+- name: Get list of upgradable packages
+  ansible.builtin.shell: apt list --upgradable
+  register: upgradable_packages
+  changed_when: false
+  when: apt_updates.changed or apt_updates.cache_updated
 
 - name: DEBUG - Print available upgrades
   ansible.builtin.debug:
-    msg: "{{ apt_updates.packages }}"
+    msg: "{{ upgradable_packages.stdout }}"
   when: apt_updates.packages | length > 0
 
 - name: Upgrade all packages
