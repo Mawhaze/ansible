@@ -6,17 +6,17 @@
 
 - name: Print number of packages that can be upgraded
   ansible.builtin.debug:
-    msg: "{{ apt_upgrade.packages | length }} packages can be upgraded."
+    msg: "{{ apt_updates.packages | length }} packages can be upgraded."
 
 - name: DEBUG - Print available upgrades
   ansible.builtin.debug:
-    msg: "{{ apt_upgrade.packages }}"
-  when: apt_upgrade.packages | length > 0
+    msg: "{{ apt_updates.packages }}"
+  when: apt_updates.packages | length > 0
 
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: safe
-  when: apt_upgrade.packages | length > 0
+  when: apt_updates.packages | length > 0
   register: apt_upgrade
 
 - name: Check if reboot is required
