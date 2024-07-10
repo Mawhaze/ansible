@@ -18,6 +18,8 @@
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: dist
+  aysnc: 600
+  poll: 15
   when: upgradable_packages is defined
 
 - name: Check if reboot is required

@@ -1,6 +1,5 @@
 ---
 - name: Validate Docker hosts
-  hosts: os_ubuntu
   become: yes
   tasks:
     - name: Ensure Docker service exists

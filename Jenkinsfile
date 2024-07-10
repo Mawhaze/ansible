@@ -9,14 +9,12 @@ pipeline {
     }
 
     triggers {
-        // Trigger the pipeline on a push to the GitHub branch
         pollSCM('H/15 * * * *')
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                // Checkout the code from GitHub
                 checkout scm
             }
         }
@@ -43,7 +41,6 @@ pipeline {
                     ]) {
                         // Write the SSH key content to a temporary file
                         sh "echo \${SSH_PUBLIC_KEY} > ssh_public_key.tmp"
-                        // writeFile file: 'ssh_private_key.tmp', text: env.SSH_PRIVATE_KEY
 
                         echo "Running docker build command with SSH key files..."
 
@@ -56,7 +53,6 @@ pipeline {
                         """
                         // Clean up the temporary SSH public key file
                         sh "rm -f ssh_public_key.tmp"
-                        // sh "rm -f ssh_private_key.tmp"
                             }
                 }
             }
