@@ -1,7 +1,7 @@
 ---
 # Run the docker role against os_ubuntu hosts
 - name: Updating Docker Containers on Ubuntu hosts
-  hosts: os_ubuntu
+  hosts: service_docker
   gather_facts: yes
   remote_user: sa-ansible
   become: yes
