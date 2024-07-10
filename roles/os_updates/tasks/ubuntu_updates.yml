@@ -24,7 +24,7 @@
   ansible.builtin.apt:
     autoremove: yes
   register: autoremove_results
-when: upgrade_results.changed
+  when: upgrade_results.changed
 
 - name: List removed packages
   ansible.builtin.debug:
