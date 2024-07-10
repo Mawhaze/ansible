@@ -1,33 +1,15 @@
 --- 
-- name: Update package list and check for upgrades
-  ansible.builtin.apt:
-    update_cache: yes
-  register: apt_updates
-
-- name: Get list of upgradable packages
-  ansible.builtin.shell: apt list --upgradable
-  register: upgradable_packages
-  changed_when: false
-  when: apt_updates.changed or apt_updates.cache_updated
-
-- name: DEBUG - Print available upgrades
-  ansible.builtin.debug:
-    msg: "{{ upgradable_packages.stdout | default('No upgradable packages found or task did not run.') }}"
-  when: upgradable_packages is defined
-
-- name: Wait for APT lock to be released
-  ansible.builtin.wait_for:
-    path: /var/lib/dpkg/lock-frontend
-    state: absent
-  retries: 10
-  delay: 10
-  until: result is succeeded
-
 - name: Upgrade all packages
   ansible.builtin.apt:
+    update_cache: yes
     upgrade: yes
     force_apt_get: true
-  when: upgradable_packages is defined
+  register: upgrade_results
+
+- name: List upgraded packages
+  ansible.builtin.debug:
+    msg: "{{ upgrade_results }}"
+  when: upgrade_results.changed
 
 - name: Check if reboot is required
   ansible.builtin.stat:
