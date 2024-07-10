@@ -1,4 +1,11 @@
 ---
+- name: Disable unattended upgrades
+  ansible.builtin.lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    regexp: '^(APT::Periodic::Update-Package-Lists|APT::Periodic::Unattended-Upgrade)'
+    line: '\1 "0";'
+    backrefs: yes
+
 - name: Update package list and check for upgrades
   ansible.builtin.apt:
     update_cache: yes
