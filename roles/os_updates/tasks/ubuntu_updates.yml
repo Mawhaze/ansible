@@ -1,9 +1,7 @@
 --- 
 - name: Update all packages
   ansible.builtin.apt:
-    update_cache: yes
     upgrade: dist
-    force_apt_get: true
   register: upgrade_results
 
 - name: List upgraded packages
@@ -23,8 +21,6 @@
 - name: Remove unneeded packages
   ansible.builtin.apt:
     autoremove: yes
-  register: autoremove_results
-  when: upgrade_results.changed
 
 - name: List removed packages
   ansible.builtin.debug:
