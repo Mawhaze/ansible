@@ -2,7 +2,7 @@
 - name: Update all packages
   ansible.builtin.apt:
     update_cache: yes
-    upgrade: yes
+    upgrade: dist
     force_apt_get: true
   register: upgrade_results
 
@@ -19,3 +19,14 @@
   ansible.builtin.debug:
     msg: "Reboot is required for the system to apply all updates."
   when: reboot_required_file.stat.exists
+
+- name: Remove unneeded packages
+  ansible.builtin.apt:
+    autoremove: yes
+  register: autoremove_results
+when: upgrade_results.changed
+
+- name: List removed packages
+  ansible.builtin.debug:
+    msg: "{{ autoremove_results.stdout_lines }}"
+  when: autoremove_results.changed
