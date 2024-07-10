@@ -7,6 +7,9 @@ folder('ansible/playbooks') {
 // Keep this alphabetical for easier maintenance
 // Define the ubuntu_docker_container_updates
 pipelineJob('ansible/playbooks/ubuntu_docker_container_updates') {
+  logRotator {
+    numToKeep(10) //Only keep the last 10
+  }
   definition {
     cps {
       // Inline Groovy script for pipeline definition
@@ -47,6 +50,9 @@ pipeline {
 
 // Define the ubuntu_os_updates
 pipelineJob('ansible/playbooks/ubuntu_os_updates') {
+  logRotator {
+    numToKeep(10) //Only keep the last 10
+  }
   definition {
     cps {
       // Inline Groovy script for pipeline definition
@@ -89,6 +95,9 @@ pipeline {
 // Define the ansible_docker build job within the docker/build folder
 pipelineJob('docker/build/ansible_docker') {
   description('Build the Ansible Docker image from a Jenkinsfile')
+  logRotator {
+    numToKeep(10) //Only keep the last 10
+  }
   definition {
     cpsScm {
       scm {
