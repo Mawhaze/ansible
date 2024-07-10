@@ -15,7 +15,7 @@
     path: "{{ item }}"
     state: absent
   loop:
-    - /var/lib/apt/lists/lock
+    - /var/lib/dpkg/lock-frontend
     - /var/lib/dpkg/lock
   become: yes
   when: upgradable_packages is defined
