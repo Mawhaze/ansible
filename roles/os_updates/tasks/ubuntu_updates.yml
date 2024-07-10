@@ -8,7 +8,7 @@
       APT::Periodic::Unattended-Upgrade "0";
     backrefs: yes
   
-  - name: Update package list and check for upgrades
+- name: Update package list and check for upgrades
   ansible.builtin.apt:
     update_cache: yes
   register: apt_updates
