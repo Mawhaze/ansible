@@ -1,7 +1,11 @@
 --- 
-- name: Upgrade all packages
+- name: Update all packages
   ansible.builtin.apt:
     update_cache: yes
+    upgrade: no
+
+- name: Update all packages
+  ansible.builtin.apt:
     upgrade: yes
     force_apt_get: true
   register: upgrade_results
@@ -9,7 +13,6 @@
 - name: List upgraded packages
   ansible.builtin.debug:
     msg: "{{ upgrade_results }}"
-  when: upgrade_results.changed
 
 - name: Check if reboot is required
   ansible.builtin.stat:
