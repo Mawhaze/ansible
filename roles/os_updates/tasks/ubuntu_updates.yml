@@ -1,16 +1,4 @@
----
-- name: Disable unattended upgrades
-  ansible.builtin.lineinfile:
-    path: /etc/apt/apt.conf.d/20auto-upgrades
-    regexp: '^(APT::Periodic::Update-Package-Lists).*'
-    line: 'APT::Periodic::Update-Package-Lists "0";'
-
-- name: Disable automatic updates
-  ansible.builtin.lineinfile:
-    path: /etc/apt/apt.conf.d/20auto-upgrades
-    regexp: '^(APT::Periodic::Unattended-Upgrade).*'
-    line: 'APT::Periodic::Unattended-Upgrade "0";'
-
+--- 
 - name: Update package list and check for upgrades
   ansible.builtin.apt:
     update_cache: yes
@@ -26,7 +14,15 @@
   ansible.builtin.debug:
     msg: "{{ upgradable_packages.stdout | default('No upgradable packages found or task did not run.') }}"
   when: upgradable_packages is defined
-  
+
+- name: Wait for APT lock to be released
+  ansible.builtin.wait_for:
+    path: /var/lib/dpkg/lock-frontend
+    state: absent
+  retries: 10
+  delay: 10
+  until: result is succeeded
+
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: yes
