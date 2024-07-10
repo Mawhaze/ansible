@@ -10,16 +10,6 @@
   changed_when: false
   when: apt_updates.changed or apt_updates.cache_updated
 
-- name: Remove APT lock files
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - /var/lib/dpkg/lock-frontend
-    - /var/lib/dpkg/lock
-  become: yes
-  when: upgradable_packages is defined
-
 - name: DEBUG - Print available upgrades
   ansible.builtin.debug:
     msg: "{{ upgradable_packages.stdout | default('No upgradable packages found or task did not run.') }}"
@@ -27,7 +17,8 @@
   
 - name: Upgrade all packages
   ansible.builtin.apt:
-    upgrade: dist
+    upgrade: yes
+    force_apt_get: true
   when: upgradable_packages is defined
 
 - name: Check if reboot is required
