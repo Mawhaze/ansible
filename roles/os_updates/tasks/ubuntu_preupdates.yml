@@ -34,4 +34,3 @@
 - name: Clear current apt cache
   ansible.builtin.apt:
     clean: true
-    force_apt_get: true

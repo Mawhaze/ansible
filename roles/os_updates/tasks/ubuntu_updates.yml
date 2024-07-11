@@ -2,7 +2,6 @@
 - name: Update package cache
   ansible.builtin.apt:
     update_cache: true
-    force_apt_get: true
 
 - name: Wait for apt lock to be released
   ansible.builtin.shell: |
@@ -21,8 +20,8 @@
 
 - name: Update all packages
   ansible.builtin.apt:
-    upgrade: dist
-    force_apt_get: true
+    name: "*"
+    state: latest
   register: upgrade_results
   until: upgrade_results is succeeded
   retries: 10
