@@ -3,7 +3,7 @@
   ansible.builtin.shell: |
     timeout=60
     end=$((SECONDS+timeout))
-    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+    while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do
       if [ $SECONDS -ge $end ]; then
         echo "Timeout waiting for apt lock"
         exit 1
@@ -16,6 +16,7 @@
 
 - name: Update package cache
   ansible.builtin.shell: apt-get update
+  become: yes
   register: update_cache
 
 - name: List upgradable packages
@@ -30,6 +31,7 @@
   ansible.builtin.shell: apt-get upgrade -y
   environment:
     DEBIAN_FRONTEND: noninteractive
+  become: yes
   register: upgrade_results
   until: upgrade_results is succeeded
   retries: 10

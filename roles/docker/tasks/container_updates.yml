@@ -22,7 +22,7 @@
     label: "{{ item.container }}"
   ignore_errors: yes
 
-- - name: DEBUG - list container images
+- name: DEBUG - list container images
   ansible.builtin.debug:
     msg: "{{ item.container.Config.Image }}"
   loop: "{{ docker_info.results }}"
