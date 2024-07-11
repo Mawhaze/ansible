@@ -1,1 +1,1 @@
-docker_network: bridge
+docker_network: docker-compose_default

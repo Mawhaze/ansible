@@ -6,7 +6,7 @@
 
 - name: List updated packages
   ansible.builtin.debug:
-    msg: "{{ update_cache_results.stdout_lines }}"
+    msg: "{{ update_cache_results }}"
 
 - name: Wait for apt lock to be released
   ansible.builtin.shell: |
