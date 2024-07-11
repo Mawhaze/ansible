@@ -1,7 +1,9 @@
 --- 
 - name: Update all packages
   ansible.builtin.apt:
+    update_cache: yes
     upgrade: dist
+    force_apt_get: yes
   register: upgrade_results
 
 - name: List upgraded packages
