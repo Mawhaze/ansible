@@ -2,6 +2,11 @@
 - name: Update package cache
   ansible.builtin.apt:
     update_cache: true
+  register: update_cache_results
+
+- name: List updated packages
+  ansible.builtin.debug:
+    msg: "{{ update_cache_results.stdout_lines }}"
 
 - name: Wait for apt lock to be released
   ansible.builtin.shell: |

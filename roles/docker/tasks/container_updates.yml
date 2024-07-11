@@ -4,6 +4,10 @@
     name: "{{ docker_network }}"
   register: network_info
 
+- name: DEBUG - list network_info
+  ansible.builtin.debug:
+    msg: "{{ network_info }}"
+
 - name: Gather information about all Docker containers
   community.docker.docker_container_info:
     name: "{{ item }}"
