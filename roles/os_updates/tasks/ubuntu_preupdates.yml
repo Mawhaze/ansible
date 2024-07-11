@@ -30,3 +30,8 @@
     - apt-daily-upgrade.timer
     - apt-daily.service
     - apt-daily-upgrade.service
+
+- name: Clear current apt cache
+  ansible.builtin.apt:
+    clean: true
+    force_apt_get: true

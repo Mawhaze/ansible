@@ -26,7 +26,7 @@
     force_apt_get: true
   register: upgrade_results
   until: upgrade_results is succeeded
-  retries: 5
+  retries: 10
   delay: 10
 
 - name: List upgraded packages
