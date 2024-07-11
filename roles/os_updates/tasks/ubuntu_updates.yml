@@ -3,7 +3,7 @@
   ansible.builtin.shell: |
     timeout=120  # Increased timeout to provide more time for locks to be released
     end=$((SECONDS+timeout))
-    while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/cache/apt/archives/lock >/dev/null 2>&1; do
+    while fuser /var/lib/apt/lists/lock /var/lib/apt/lists /var/cache/apt/archives/lock >/dev/null 2>&1; do
       if [ $SECONDS -ge $end ]; then
         echo "Timeout waiting for apt lock"
         exit 1

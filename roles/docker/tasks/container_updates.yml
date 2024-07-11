@@ -16,8 +16,8 @@
 
 - name: DEBUG - list container images
   ansible.builtin.debug:
-    msg: "{{ item.container.Image }}"
-  loop: "{{ docker_info.results | selectattr('State.Status', 'equalto', 'running') }}"
+    msg: "{{ item.container.Image | selectattr('State.Status', 'equalto', 'running') }}"
+  loop: "{{ docker_info.results }}"
   loop_control:
     label: "{{ item.container.Config.Image }}"
   ignore_errors: yes
@@ -31,14 +31,15 @@
 
 - name: DEBUG - list container_images_shas
   ansible.builtin.debug:
-    msg: "{{ container_images_shas }}"
+    msg: "{{ item }}"
+  loop: "{{ container_images_shas }}"
 
-# - name: Pull the latest version of images for running containers
-#   community.docker.docker_image:
-#     name: "{{ item.Image }}"
-#     source: pull
-#   loop: "{{ docker_info.containers | selectattr('State.Status', 'equalto', 'running') }}"
-#   when: docker_info.containers | length > 0
+- name: Pull the latest version of images for running containers
+  community.docker.docker_image:
+    name: "{{ item.container.Config.Image }}"
+    source: pull
+  loop: "{{ docker_info.containers }}"
+  when: docker_info.containers | length > 0
 
 # - name: Gather new image SHAs for running containers
 #   community.docker.docker_image_info:
