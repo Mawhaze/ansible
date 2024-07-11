@@ -4,17 +4,8 @@
     update_cache: true
     force_apt_get: true
 
-- name: Wait for apt to be available
-  shell: |
-    timeout=60
-    end=$((SECONDS+timeout))
-    while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
-      if [ $SECONDS -ge $end ]; then
-        echo "Timeout waiting for apt lock"
-        exit 1
-      fi
-      sleep 5
-    done
+- name: Remove apt lock file
+  ansible.builtin.shell: rm -f /var/lib/dpkg/lock-frontend
 
 - name: Update all packages
   ansible.builtin.apt:

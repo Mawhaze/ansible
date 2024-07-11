@@ -1,6 +1,7 @@
 ---
 - name: Gather information about all Docker containers
   community.docker.docker_container_info:
+  name: "*"
   register: docker_info
 
 - name: DEBUG - list docker_info
@@ -34,13 +35,13 @@
   loop: "{{ before_pull_images.results | zip(docker_info.containers | selectattr('State.Status', 'equalto', 'running') | list, after_pull_images.results) }}"
   when: docker_info.containers | length > 0
   
-- name: Restart containers if the image SHA has changed
-  community.docker.docker_container:
-    name: "{{ item.1.Names[0] }}"
-    state: restarted
-  loop: "{{ before_pull_images.results | zip(docker_info.containers | selectattr('State.Status', 'equalto', 'running') | list, after_pull_images.results) }}"
-  when: 
-    - docker_info.containers | length > 0
-    - item.0.Id != item.2.Id
-  loop_control:
-    label: "{{ item.1.Names[0] }}"
+# - name: Restart containers if the image SHA has changed
+#   community.docker.docker_container:
+#     name: "{{ item.1.Names[0] }}"
+#     state: restarted
+#   loop: "{{ before_pull_images.results | zip(docker_info.containers | selectattr('State.Status', 'equalto', 'running') | list, after_pull_images.results) }}"
+#   when: 
+#     - docker_info.containers | length > 0
+#     - item.0.Id != item.2.Id
+#   loop_control:
+#     label: "{{ item.1.Names[0] }}"
