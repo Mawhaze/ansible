@@ -17,7 +17,20 @@
 - name: DEBUG - list docker_info
   ansible.builtin.debug:
     msg: "{{ item }}"
-  loop: "{{ docker_info.results }}"
+  loop: "{{ docker_info.results.container }}"
+  ignore_errors: yes
+
+- name: DEBUG - list container images
+  ansible.builtin.debug:
+    msg: "{{ item }}"
+  loop: "{{ docker_info.results.container.Config.Image }}"
+  ignore_errors: yes
+
+- name: DEBUG - list container SHA
+  ansible.builtin.debug:
+    msg: "{{ item }}"
+  loop: "{{ docker_info.results.container.Image }}"
+  ignore_errors: yes
 
 # - name: Gather current image SHAs for running containers
 #   community.docker.docker_image_info:

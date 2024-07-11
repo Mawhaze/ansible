@@ -1,40 +1,22 @@
 ---
 - name: Update package cache
-  ansible.builtin.apt:
-    update_cache: true
-  register: update_cache_results
+  ansible.builtin.shell: apt-get update
+  register: update_cache
 
-- name: List updated packages
+- name: List upgradable packages
+  ansible.builtin.shell: apt list --upgradable
+  register: upgradable_packages
+
+- name: Print names of packages to be upgraded
   ansible.builtin.debug:
-    msg: "{{ update_cache_results }}"
-
-- name: Wait for apt lock to be released
-  ansible.builtin.shell: |
-    timeout=60
-    end=$((SECONDS+timeout))
-    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
-      if [ $SECONDS -ge $end ]; then
-        echo "Timeout waiting for apt lock"
-        exit 1
-      fi
-      sleep 1
-    done
-  register: wait_for_lock
-  failed_when: wait_for_lock.rc != 0
-  changed_when: false
+    msg: "{{ upgradable_packages.stdout_lines }}"
 
 - name: Update all packages
-  ansible.builtin.apt:
-    name: "*"
-    state: latest
+  ansible.builtin.shell: apt-get upgrade -y
   register: upgrade_results
   until: upgrade_results is succeeded
   retries: 10
   delay: 10
-
-- name: List upgraded packages
-  ansible.builtin.debug:
-    msg: "{{ upgrade_results.stdout_lines }}"
 
 - name: Check if reboot is required
   ansible.builtin.stat:
