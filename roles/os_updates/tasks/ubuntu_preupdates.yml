@@ -32,6 +32,5 @@
     - apt-daily-upgrade.service
 
 - name: Clear current apt cache
-  ansible.builtin.apt:
-    clean: true
-  ignore_errors: true
+  ansible.builtin.shell: apt-get clean
+  ignore_errors: yes

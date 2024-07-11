@@ -14,22 +14,28 @@
   loop: "{{ network_info.network.Containers.keys() }}"
   register: docker_info
 
-- name: DEBUG - list docker_info
+- name: DEBUG - list container information
   ansible.builtin.debug:
-    msg: "{{ item }}"
-  loop: "{{ docker_info.results.container }}"
+    msg: "{{ item.container }}"
+  loop: "{{ docker_info.results }}"
+  loop_control:
+    label: "{{ item.container }}"
   ignore_errors: yes
 
-- name: DEBUG - list container images
+- - name: DEBUG - list container images
   ansible.builtin.debug:
-    msg: "{{ item }}"
-  loop: "{{ docker_info.results.container.Config.Image }}"
+    msg: "{{ item.container.Config.Image }}"
+  loop: "{{ docker_info.results }}"
+  loop_control:
+    label: "{{ item.container.Config.Image }}"
   ignore_errors: yes
 
-- name: DEBUG - list container SHA
+- name: DEBUG - list container information
   ansible.builtin.debug:
-    msg: "{{ item }}"
-  loop: "{{ docker_info.results.container.Image }}"
+    msg: "{{ item.container.Image }}"
+  loop: "{{ docker_info.results }}"
+  loop_control:
+    label: "{{ item.container.Image }}"
   ignore_errors: yes
 
 # - name: Gather current image SHAs for running containers

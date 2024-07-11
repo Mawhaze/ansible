@@ -1,4 +1,19 @@
 ---
+- name: Wait for apt lock to be released
+  ansible.builtin.shell: |
+    timeout=60
+    end=$((SECONDS+timeout))
+    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+      if [ $SECONDS -ge $end ]; then
+        echo "Timeout waiting for apt lock"
+        exit 1
+      fi
+      sleep 1
+    done
+  register: wait_for_lock
+  failed_when: wait_for_lock.rc != 0
+  changed_when: false
+
 - name: Update package cache
   ansible.builtin.shell: apt-get update
   register: update_cache
@@ -13,10 +28,16 @@
 
 - name: Update all packages
   ansible.builtin.shell: apt-get upgrade -y
+  environment:
+    DEBIAN_FRONTEND: noninteractive
   register: upgrade_results
   until: upgrade_results is succeeded
   retries: 10
   delay: 10
+
+- name: DEBUG - list upgrade_results
+  ansible.builtin.debug:
+    msg: "{{ upgrade_results }}"
 
 - name: Check if reboot is required
   ansible.builtin.stat:
