@@ -14,3 +14,4 @@ keyed_groups:
 groups:
   os_ubuntu: "'ubuntu' in (proxmox_tags_parsed|list)"
   service_docker: "'docker' in (proxmox_tags_parsed|list)"
+  service_jenkins: "'jenkins' in (proxmox_tags_parsed|list)"

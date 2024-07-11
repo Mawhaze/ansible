@@ -1,12 +1,18 @@
 ---
+- name: Get network info
+  ansible.builtin.docker_network_info:
+    name: "{{ docker_network }}"
+  register: network_info
+
 - name: Gather information about all Docker containers
   community.docker.docker_container_info:
-  name: "*"
+    name: "{{ item }}"
+  loop: "{{ network_info.network.Containers.keys() }}"
   register: docker_info
 
 - name: DEBUG - list docker_info
   ansible.builtin.debug:
-    msg: "{{ docker_info.containers }}"
+    msg: "{{ docker_info }}"
 
 - name: Gather current image SHAs for running containers
   community.docker.docker_image_info:
