@@ -10,7 +10,7 @@
 
 - Docker
   - maintenance - updates, image cleanup, etc.
-  - build job for ansible
+  - nightly jenkins cleanup
 
 - Proxmox
   - maintenance
@@ -22,4 +22,4 @@
 
 ## Where I left off
 
-- EOD - continue working on deploying ansible private key
+- EOD - 
