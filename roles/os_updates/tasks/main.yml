@@ -3,6 +3,10 @@
   ansible.builtin.debug:
     msg: "ansible_host is {{ ansible_host }}"
 
-- name: Check OS type for Ubuntu
+- name: Run preupdate tasks
+  ansible.builtin.include_tasks: "ubuntu_preupdates.yml"
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: Run update tasks
   ansible.builtin.include_tasks: "ubuntu_updates.yml"
   when: ansible_facts['distribution'] == "Ubuntu"
