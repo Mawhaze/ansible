@@ -14,36 +14,24 @@
   loop: "{{ network_info.network.Containers.keys() }}"
   register: docker_info
 
-- name: DEBUG - list container information
-  ansible.builtin.debug:
-    msg: "{{ item.container }}"
-  loop: "{{ docker_info.results }}"
-  loop_control:
-    label: "{{ item.container }}"
-  ignore_errors: yes
-
 - name: DEBUG - list container images
   ansible.builtin.debug:
-    msg: "{{ item.container.Config.Image }}"
-  loop: "{{ docker_info.results }}"
+    msg: "{{ item.container.Image }}"
+  loop: "{{ docker_info.results | selectattr('State.Status', 'equalto', 'running') }}"
   loop_control:
     label: "{{ item.container.Config.Image }}"
   ignore_errors: yes
 
-- name: DEBUG - list container information
-  ansible.builtin.debug:
-    msg: "{{ item.container.Image }}"
+- name: Create dictionary of container config images and their current SHAs
+  set_fact:
+    container_images_shas: >-
+      {{ prepull_images_shas | default({}) | combine({item.container.Config.Image: item.container.Image}) }}
   loop: "{{ docker_info.results }}"
-  loop_control:
-    label: "{{ item.container.Image }}"
-  ignore_errors: yes
+  when: docker_info.results | length > 0
 
-# - name: Gather current image SHAs for running containers
-#   community.docker.docker_image_info:
-#     name: "{{ item.Image }}"
-#   register: before_pull_images
-#   loop: "{{ docker_info.containers | selectattr('State.Status', 'equalto', 'running') }}"
-#   when: docker_info.containers | length > 0
+- name: DEBUG - list container_images_shas
+  ansible.builtin.debug:
+    msg: "{{ container_images_shas }}"
 
 # - name: Pull the latest version of images for running containers
 #   community.docker.docker_image:
