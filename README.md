@@ -6,6 +6,10 @@
 - All playbooks will be ran via jenkins and configured in ./jenkins/jobdsl/job_config.groovy
   - This includes docker build jobs for ansible.
 
+## Features to add
+
+- Discord integration for notifications
+
 ## Playbooks to make
 
 - Docker

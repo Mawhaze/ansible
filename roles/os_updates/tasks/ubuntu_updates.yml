@@ -21,8 +21,7 @@
 
 - name: Update all packages
   ansible.builtin.apt:
-    name: "*"
-    state: latest
+    upgrade: dist
     force_apt_get: true
   register: upgrade_results
   until: upgrade_results is succeeded

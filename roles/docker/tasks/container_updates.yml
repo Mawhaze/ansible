@@ -12,7 +12,7 @@
 
 - name: DEBUG - list docker_info
   ansible.builtin.debug:
-    msg: "{{ docker_info.results.container.Config.Image }}"
+    msg: "{{ docker_info.results.msg.container.Config.Image }}"
 
 # - name: Gather current image SHAs for running containers
 #   community.docker.docker_image_info:
