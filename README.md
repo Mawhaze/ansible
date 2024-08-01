@@ -26,4 +26,6 @@
 
 ## Where I left off
 
-- EOD - 
+- EOD
+  - Finish building out docker container update tasks
+  - resolve ubuntu os updates not finding/applying

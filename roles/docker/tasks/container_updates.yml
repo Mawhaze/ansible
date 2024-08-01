@@ -16,7 +16,7 @@
 
 - name: DEBUG - list container images
   ansible.builtin.debug:
-    msg: "{{ item.container.Image | selectattr('State.Status', 'equalto', 'running') }}"
+    msg: "{{ item.container.Image }}"
   loop: "{{ docker_info.results }}"
   loop_control:
     label: "{{ item.container.Config.Image }}"

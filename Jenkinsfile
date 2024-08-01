@@ -67,7 +67,7 @@ pipeline {
                         string(credentialsId: 'dockerhub_password', variable: 'DOCKERHUB_PASSWORD')
                     ]) {
                         // Login to DockerHub
-                        sh 'echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin'
+                        sh 'echo \${DOCKERHUB_PASSWORD} | docker login --username \${DOCKERHUB_USERNAME} --password-stdin'
                         // Push the Docker image to DockerHub
                         sh "docker push ${IMAGE_NAME}:latest"
                         // Logout from DockerHub

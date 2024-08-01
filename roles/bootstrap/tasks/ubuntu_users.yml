@@ -1,0 +1,18 @@
+---
+- name: Create users
+  user:
+    name: "{{ item }}"
+    state: present
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+  with_items:
+    - "{{ users }}"
+
+- name: Pull users ssh public keys from AWS SSM
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('aws_ssm', '/ansible/' + item + '/public_key', region='us-west-2', decrypt='true') }}"
+  with_items:
+    - "{{ users }}"

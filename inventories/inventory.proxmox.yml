@@ -8,10 +8,11 @@ want_proxmox_nodes_ansible_host: false
 filters:
   - proxmox_status == "running"
 compose:
-  ansible_host: "'{{ proxmox_name }}.mawhaze.dev'"
+  ansible_host: "'{{ proxmox_name }}.maw.local'"
 keyed_groups:
   - key: proxmox_tags_parsed
 groups:
   os_ubuntu: "'ubuntu' in (proxmox_tags_parsed|list)"
   service_docker: "'docker' in (proxmox_tags_parsed|list)"
   service_jenkins: "'jenkins' in (proxmox_tags_parsed|list)"
+  bootstrap_host: "'bootstrap' in (proxmox_tags_parsed|list)"
