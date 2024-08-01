@@ -1,3 +1,8 @@
 ---
 users:
   - mawhaze
+
+docker_users:
+  - mawhaze
+  - sa-jenkins
+  - sa-ansible
