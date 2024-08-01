@@ -1,5 +1,7 @@
 ---
-# Uninstall unoffical Docker versions
+- name: Include user variables
+  include_vars: users.yml
+
 - name: Uninstall non CE Docker versions
   apt:
     name: "{{ item }}"
