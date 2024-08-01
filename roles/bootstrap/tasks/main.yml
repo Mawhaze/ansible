@@ -7,4 +7,4 @@
   include_tasks: docker_setup.yml
   when: 
     - ansible_facts['distribution'] == "Ubuntu"
-    - "'docker' in group_names"
+    - "'service_docker' in group_names"
