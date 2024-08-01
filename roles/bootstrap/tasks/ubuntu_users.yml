@@ -12,6 +12,16 @@
   with_items:
     - "{{ users }}"
 
+- name: Set passwordless sudo 
+  lineinfile:
+    path: /etc/sudoers
+    regexp: "{{ item}}"
+    line: "{{ item }} ALL=(ALL) NOPASSWD: ALL"
+    state: present
+    validate: 'visudo -cf %s'
+  with_items:
+    - "{{ users }}"
+
 - name: Pull users ssh public keys from AWS SSM
   authorized_key:
     user: "{{ item }}"
