@@ -1,0 +1,10 @@
+---
+# Bootstrap Ubuntu hosts in the bootstrap group
+- name: Bootstrap Ubuntu hosts
+  hosts: bootstrap_host
+  gather_facts: yes
+  remote_user: sa-ansible
+  become: yes
+
+  roles:
+    - bootstrap
