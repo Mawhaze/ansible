@@ -1,4 +1,7 @@
 ---
+- name: Include user variables
+  include_vars: users.yml
+
 - name: Create users
   user:
     name: "{{ item }}"
