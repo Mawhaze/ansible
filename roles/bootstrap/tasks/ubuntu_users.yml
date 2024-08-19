@@ -15,7 +15,7 @@
 - name: Set passwordless sudo 
   lineinfile:
     path: /etc/sudoers
-    regexp: "{{ item}}"
+    regexp: "{{ item }}"
     line: "{{ item }} ALL=(ALL) NOPASSWD: ALL"
     state: present
     validate: 'visudo -cf %s'
