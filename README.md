@@ -21,11 +21,7 @@
   - node level updates
 
 - Ubuntu
-  - Change the update play to flag the VM with `reboot`
+  - Change the update play to flag the VM with `reboot` and notify discord
   - build a reboot play that runs nightly looking for hosts tagged `reboot`
 
 ## Where I left off
-
-- EOD
-  - Finish building out docker container update tasks
-  - resolve ubuntu os updates not finding/applying
