@@ -10,3 +10,4 @@
     line: "{{ item }}"
   loop: "{{ vm_ip_list }}"
   delegate_to: "{{ pihole_host}}"
+  become: true
