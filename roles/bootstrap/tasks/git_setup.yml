@@ -20,12 +20,14 @@
   no_log: true
 
 - name: Pull git user private ssh key from AWS SSM
-  copy:
-    content: "{{ item.private_key | regex_replace('\\\\n', '\n') | regex_replace('^\\s+|\\s+$', '', multiline=True) | format_key }}"
+  template:
+    src: format_key.j2
     dest: "/home/{{ item.name }}/.ssh/id_ed25519"
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
     mode: 0600
+  vars:
+    value: "{{ item.private_key | regex_replace('\\\\n', '\n') | regex_replace('^\\s+|\\s+$', '', multiline=True) }}"
   with_items:
     - "{{ git_user_keys }}"
   # no_log: true
