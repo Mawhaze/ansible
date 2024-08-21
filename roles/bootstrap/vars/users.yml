@@ -10,7 +10,7 @@ docker_users:
 git_user_keys:
   - name: sa-ansible
     public_key: "{{ lookup('aws_ssm', '/ansible/proxmox/git_public_key', region='us-west-2', decrypt='true') }}"
-    private_key: "{{ lookup('aws_ssm', '/ansible/proxmox/git_private_key', region='us-west-2', decrypt='true')| replace('\\n', '\n') }}"
+    private_key: "{{ lookup('aws_ssm', '/ansible/proxmox/git_private_key', region='us-west-2', decrypt='true') }}"
 
 git_user: "{{ lookup('aws_ssm', '/ansible/proxmox/git_user', region='us-west-2', decrypt='true') }}"
 git_email: "{{ lookup('aws_ssm', '/ansible/proxmox/git_email', region='us-west-2', decrypt='true') }}"
