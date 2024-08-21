@@ -1,8 +1,17 @@
 ---
+# Create DNS entries for new VMs
+- name: Create DNS entries for PiHole
+  hosts: localhost
+  gather_facts: true
+  remote_user: sa-ansible
+  
+  roles:
+    - create_dns
+
 # Bootstrap Ubuntu hosts in the bootstrap group
 - name: Bootstrap Ubuntu hosts
   hosts: bootstrap_host
-  gather_facts: yes
+  gather_facts: false
   remote_user: sa-ansible
   become: yes
 

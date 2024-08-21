@@ -1,14 +1,19 @@
 ---
-- name: Add Ubuntu users
-  include_tasks: ubuntu_users.yml
-  when: ansible_facts['distribution'] == "Ubuntu"
+- name: Provision users and services
+  block:
+  - name: Gather Facts
+    setup:
 
-- name: Configure Git
-  include_tasks: git_setup.yml
-  when: ansible_facts['distribution'] == "Ubuntu"
+  - name: Add Ubuntu users
+    include_tasks: ubuntu_users.yml
+    when: ansible_facts['distribution'] == "Ubuntu"
 
-- name: Configure Docker
-  include_tasks: docker_setup.yml
-  when: 
-    - ansible_facts['distribution'] == "Ubuntu"
-    - "'service_docker' in group_names"
+  - name: Configure Git
+    include_tasks: git_setup.yml
+    when: ansible_facts['distribution'] == "Ubuntu"
+
+  - name: Configure Docker
+    include_tasks: docker_setup.yml
+    when: 
+      - ansible_facts['distribution'] == "Ubuntu"
+      - "'service_docker' in group_names"

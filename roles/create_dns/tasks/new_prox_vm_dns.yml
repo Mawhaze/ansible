@@ -1,0 +1,61 @@
+---
+- name: Include variables
+  include_vars: proxmox_vars.yml
+
+- name: Gather VM hostnames
+  community.general.proxmox_vm_info:
+    api_user: "{{ proxmox_api_user }}"
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_cluster_url | regex_replace('^https://', '') | regex_replace(':8006$', '') }}"
+    validate_certs: true
+  register: vm_info
+
+# - name: DEBUG | Display VM info
+#   ansible.builtin.debug:
+#     msg: "{{ vm_info }}"
+
+- name: Get Proxmox API ticket
+  uri:
+    url: "{{ proxmox_cluster_url }}/api2/json/access/ticket"
+    method: POST
+    body_format: json
+    body:
+      username: "{{ proxmox_api_user }}"
+      password: "{{ proxmox_api_password }}"
+    headers:
+      Content-Type: "application/json"
+  register: proxmox_ticket
+
+# - name: DEBUG | Display Proxmox ticket
+#   ansible.builtin.debug:
+#     msg: "{{ proxmox_ticket }}"
+
+- name: Get VM details from Proxmox API
+  uri:
+    url: "{{ proxmox_cluster_url }}/api2/json/nodes/{{ item.node }}/qemu/{{ item.vmid }}/agent/network-get-interfaces"
+    method: GET
+    headers:
+      Cookie: "PVEAuthCookie={{ proxmox_ticket.json.data.ticket }}"
+      CSRFPreventionToken: "{{ proxmox_ticket.json.data.CSRFPreventionToken }}"
+    validate_certs: true
+  register: vm_network_info
+  loop: "{{ vm_info.proxmox_vms }}"
+  failed_when: false
+
+- name: DEBUG | Display VM network info
+  ansible.builtin.debug:  
+    msg: "{{ item }}"
+  loop: "{{ vm_network_info.results }}"
+
+- name: Extract IP addresses
+  set_fact:
+    vm_ip_list: >-
+      {{ vm_ip_list | default([]) + [
+        ((item.json.data.result | json_query('[1]."ip-addresses"[0]."ip-address"') | default(''))) + ' ' + item.item.name + '.maw.local'
+      ] | select('regex', '^(?!\\s*$).+') | list }}
+  loop: "{{ vm_network_info.results }}"
+  when: item.json is defined and item.json.data.result is defined
+
+- name: DEBUG | Display the VM IP list
+  debug:
+    var: vm_ip_list

@@ -1,0 +1,7 @@
+---
+# Inventory the Proxmox cluster for new VMs ip/hostnames
+- name: Create the list of Proxmox VM DNS records to add
+  include_tasks: new_prox_vm_dns.yml
+
+- name: Add records to PiHole
+  include_tasks: add_dns_records.yml

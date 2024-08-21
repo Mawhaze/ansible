@@ -1,0 +1,12 @@
+---
+# Add DNS records to PiHole container volume
+- name: Include variables
+  include_vars: pihole_vars.yml
+
+- name: Add the new DNS entries to the PiHole container volume
+  lineinfile:
+    path: "{{ pihole_path }}"
+    state: present
+    line: "{{ item }}"
+  loop: "{{ vm_ip_list }}"
+  delegate_to: "{{ pihole_host}}"
