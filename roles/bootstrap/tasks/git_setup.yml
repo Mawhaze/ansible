@@ -1,0 +1,40 @@
+---
+- name: Include variables
+  include_vars: users.yml
+
+- name: Update cache and install git
+  apt:
+    update_cache: yes
+    name: git
+    state: present
+
+- name: Pull git user public ssh key from AWS SSM
+  copy:
+    content: "{{ item.public_key }}"
+    dest: "/home/{{ item.name }}/.ssh/id_ed25519.pub"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: 0644
+  with_items:
+    - "{{ git_users }}"
+
+- name: Pull git user private ssh key from AWS SSM
+  copy:
+    content: "{{ item.private_key }}"
+    dest: "/home/{{ item.name }}/.ssh/id_ed25519"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: 0600
+  with_items:
+    - "{{ git_users }}"
+
+- name: Set up git user credentials
+  community.general.git_config:
+    scope: global
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  loop:
+    - { name: "user.name", value: "{{ git_users.user }}" }
+    - { name: "user.email", value: "{{ git_users.email }}" }
+  become: true
+

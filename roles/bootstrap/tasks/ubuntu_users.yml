@@ -22,7 +22,7 @@
   with_items:
     - "{{ users }}"
 
-- name: Pull users ssh public keys from AWS SSM
+- name: Pull authorized ssh public keys from AWS SSM
   authorized_key:
     user: "{{ item }}"
     state: present

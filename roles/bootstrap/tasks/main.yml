@@ -7,6 +7,10 @@
   - name: Set up basic host information
     include_tasks: set_host_info.yml
 
+  - name: Initial updates
+    include_roles:
+      name: os_updates
+
   - name: Add Ubuntu users
     include_tasks: ubuntu_users.yml
     when: ansible_facts['distribution'] == "Ubuntu"
