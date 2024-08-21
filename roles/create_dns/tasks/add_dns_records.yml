@@ -16,3 +16,5 @@
   ansible.builtin.shell:
     chdir: "{{ dockeer_path }}"
     cmd: docker-compose restart pihole
+  delegate_to: "{{ pihole_host }}"
+  become: true
