@@ -1,0 +1,4 @@
+{% set lines = value.split('\n') %}
+{% for line in lines %}
+{{ line | regex_replace('^\\s+|\\s+$') }}
+{% endfor %}

@@ -21,7 +21,7 @@
 
 - name: Pull git user private ssh key from AWS SSM
   copy:
-    content: "{{ item.private_key | replace('\\n', '\n') }}"
+    content: "{{ item.private_key | regex_replace('\\\\n', '\n') | regex_replace('^\\s+|\\s+$', '', multiline=True) | format_key }}"
     dest: "/home/{{ item.name }}/.ssh/id_ed25519"
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
@@ -41,7 +41,7 @@
   become: true
   become_user: "{{ git_user_keys.0.name }}"
 
-- name: DEBUG | Display git config
-  command: git config --list
-  become: true
-  become_user: "{{ git_user_keys.0.name }}"
+# - name: DEBUG | Display git config
+#   command: git config --list
+#   become: true
+#   become_user: "{{ git_user_keys.0.name }}"
