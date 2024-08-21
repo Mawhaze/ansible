@@ -16,7 +16,8 @@
     group: "{{ item.name }}"
     mode: 0644
   with_items:
-    - "{{ git_users }}"
+    - "{{ git_user_keys }}"
+  no_log: true
 
 - name: Pull git user private ssh key from AWS SSM
   copy:
@@ -26,7 +27,8 @@
     group: "{{ item.name }}"
     mode: 0600
   with_items:
-    - "{{ git_users }}"
+    - "{{ git_user_keys }}"
+  no_log: true
 
 - name: Set up git user credentials
   community.general.git_config:
@@ -34,7 +36,7 @@
     name: "{{ item.name }}"
     value: "{{ item.value }}"
   loop:
-    - { name: "user.name", value: "{{ git_users.user }}" }
-    - { name: "user.email", value: "{{ git_users.email }}" }
+    - { name: "user.name", value: "{{ git_user }}" }
+    - { name: "user.email", value: "{{ git_email }}" }
   become: true
 
