@@ -2,7 +2,7 @@
 # Configure networking 
 - name: Configure static ip
   template:
-    src: static_ip.j2
+    src: netplan.j2
     dest: /etc/netplan/50-cloud-init.yaml
   become: true
 
