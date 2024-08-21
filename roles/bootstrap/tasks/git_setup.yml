@@ -30,7 +30,7 @@
     value: "{{ item.private_key | regex_replace('\\\\n', '\n') | regex_replace('^\\s+|\\s+$', '', multiline=True) }}"
   with_items:
     - "{{ git_user_keys }}"
-  # no_log: true
+  no_log: true
 
 - name: Set up git user credentials
   community.general.git_config:
