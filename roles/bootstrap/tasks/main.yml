@@ -8,7 +8,7 @@
     include_tasks: set_host_info.yml
 
   - name: Initial updates
-    include_roles:
+    include_role:
       name: os_updates
 
   - name: Add Ubuntu users
