@@ -17,3 +17,14 @@
     cmd: "cd {{ docker_path }} && ls -la && docker-compose down && docker-compose up -d"
   delegate_to: "{{ pihole_host }}"
   become: true
+
+- name: Sleep for 45 seconds to allow PiHole to restart
+  ansible.builtin.wait_for:
+    timeout: 45
+    state: started
+    host: "{{ pihole_host }}"
+    port: 53
+    delay: 5
+    connect_timeout: 5
+  delegate_to: "{{ pihole_host }}"
+  become: true
