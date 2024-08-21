@@ -11,12 +11,15 @@
   loop: "{{ vm_ip_list }}"
   delegate_to: "{{ pihole_host}}"
   become: true
+  register: dns_record_added
+  changed_when: dns_record_added is changed
 
 - name: Restart the PiHole container
   ansible.builtin.shell:
     cmd: "cd {{ docker_path }} && ls -la && docker-compose down && docker-compose up -d"
   delegate_to: "{{ pihole_host }}"
   become: true
+  when: dns_record_added.changed
 
 - name: Sleep for 45 seconds to allow PiHole to restart
   ansible.builtin.wait_for:
