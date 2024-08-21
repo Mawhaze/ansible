@@ -1,0 +1,45 @@
+---
+# Configure networking 
+- name: Configure static ip
+  template:
+    src: static_ip.j2
+    dest: /etc/netplan/50-cloud-init.yaml
+  become: true
+
+# - name: Apply new network settings
+#   command: netplan apply
+#   become: true
+
+# Configure new VM hostname
+- name: Configure hostname
+  template:
+    src: hostname.j2
+    dest: /etc/hostname
+  become: true
+
+- name: Configure hosts file
+  template:
+    src: etc_hosts.j2
+    dest: /etc/hosts
+  become: true
+
+# Reboot the new host and wait it out
+# - name: Reboot the new host
+#   block:
+#     - name: Reboot the new host
+#       reboot:
+#         reboot_timeout: 300
+#         msg: "Rebooting the new host to apply ip/hostname settings"
+#         post_reboot_delay: 30
+#         test_command: uptime
+
+#     - name: Wait for the host 
+#       wait_for_connection:
+#         delay: 10
+#         timeout: 300
+#         sleep: 5
+  
+#   rescue:   
+#     - name: Notify if the reboot failed
+#       debug:
+#         msg: "Server failed to reboot, or did not come back up in time"

@@ -1,0 +1,14 @@
+network:
+    ethernets:
+        ens18:
+            addresses:
+            - {{ ansible_default_ipv4['address'] }}/24
+            nameservers:
+                addresses:
+                - 10.10.10.23
+                - 10.10.10.1
+                search: []
+            routes:
+            -   to: default
+                via: 10.10.10.1
+    version: 2
