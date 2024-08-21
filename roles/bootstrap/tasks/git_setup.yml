@@ -21,7 +21,7 @@
 
 - name: Pull git user private ssh key from AWS SSM
   copy:
-    content: "{{ item.private_key }}"
+    content: "{{ item.private_key | replace('\\n', '\n') }}"
     dest: "/home/{{ item.name }}/.ssh/id_ed25519"
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
