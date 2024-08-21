@@ -7,7 +7,7 @@ want_proxmox_nodes_ansible_host: false
 filters:
   - proxmox_status == "running"
 compose:
-  ansible_host: proxmox_agent_interfaces | selectattr('name', 'in', 'eth0,ens18') | map(attribute='ip-addresses') | flatten | first | ansible.util.ipaddr('address')
+  ansible_host: "{{ proxmox_name }}.maw.local"
 keyed_groups:
   - key: proxmox_tags_parsed
 groups:
