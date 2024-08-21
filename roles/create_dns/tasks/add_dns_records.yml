@@ -18,17 +18,16 @@
   delegate_to: "{{ pihole_host }}"
   become: true
 
-- name: DEBUG | Display container info
-  debug:
-    msg: "{{ container_info }}"
-
 - name: Check PiHole container status
   docker_container_info:
     name: pihole
   register: container_info
-  until: container_info.container.State.Status == "running"
   retries: 6
   delay: 30
+
+- name: DEBUG | Display container info
+  debug:
+    msg: "{{ container_info }}"
 
 - name: Display result
   debug:
