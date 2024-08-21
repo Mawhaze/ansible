@@ -11,3 +11,8 @@
   loop: "{{ vm_ip_list }}"
   delegate_to: "{{ pihole_host}}"
   become: true
+
+- name: Restart the PiHole container
+  ansible.builtin.shell:
+    chdir: "{{ dockeer_path }}"
+    cmd: docker-compose restart pihole
