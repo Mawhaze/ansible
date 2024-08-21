@@ -41,6 +41,7 @@
   register: vm_network_info
   loop: "{{ vm_info.proxmox_vms }}"
   failed_when: false
+  no_log: true
 
 # - name: DEBUG | Display VM network info
 #   ansible.builtin.debug:  
@@ -55,6 +56,7 @@
       ] | select('regex', '^(?!\\s*$).+') | list }}
   loop: "{{ vm_network_info.results }}"
   when: item.json is defined and item.json.data.result is defined
+  no_log: true
 
 # - name: DEBUG | Display the VM IP list
 #   debug:
