@@ -26,6 +26,10 @@
   retries: 6
   delay: 30
 
+- name: DEBUG | Display container info
+  debug:
+    msg: "{{ container_info }}"
+
 - name: Display result
   debug:
     msg: "Container pihole is running"

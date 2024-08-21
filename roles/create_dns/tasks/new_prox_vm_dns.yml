@@ -42,10 +42,10 @@
   loop: "{{ vm_info.proxmox_vms }}"
   failed_when: false
 
-- name: DEBUG | Display VM network info
-  ansible.builtin.debug:  
-    msg: "{{ item }}"
-  loop: "{{ vm_network_info.results }}"
+# - name: DEBUG | Display VM network info
+#   ansible.builtin.debug:  
+#     msg: "{{ item }}"
+#   loop: "{{ vm_network_info.results }}"
 
 - name: Extract IP addresses
   set_fact:
@@ -56,6 +56,6 @@
   loop: "{{ vm_network_info.results }}"
   when: item.json is defined and item.json.data.result is defined
 
-- name: DEBUG | Display the VM IP list
-  debug:
-    var: vm_ip_list
+# - name: DEBUG | Display the VM IP list
+#   debug:
+#     var: vm_ip_list
