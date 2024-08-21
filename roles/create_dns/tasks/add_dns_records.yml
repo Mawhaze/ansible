@@ -14,7 +14,7 @@
 
 - name: Restart the PiHole container
   ansible.builtin.shell:
-    cmd: "cd {{ docker_path }} && docker-compose restart pihole"
+    cmd: "cd {{ docker_path }} && docker-compose restart"
   delegate_to: "{{ pihole_host }}"
   become: true
 
