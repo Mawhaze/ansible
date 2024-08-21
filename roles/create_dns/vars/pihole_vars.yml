@@ -2,4 +2,4 @@
 pihole_host: 10.10.10.23
 pihole_path: /home/mawhaze/docker/pihole/custom.list
 
-dockeer_path: /home/mawhaze/docker
+docker_path: /home/mawhaze/docker

@@ -14,7 +14,24 @@
 
 - name: Restart the PiHole container
   ansible.builtin.shell:
-    chdir: "{{ dockeer_path }}"
-    cmd: docker-compose restart pihole
+    cmd: "cd {{ docker_path }} && docker-compose restart pihole"
   delegate_to: "{{ pihole_host }}"
   become: true
+
+- name: Check PiHole container status
+  docker_container_info:
+    name: pihole
+  register: container_info
+  until: container_info.container.State.Status == "running"
+  retries: 6
+  delay: 30
+
+- name: Display result
+  debug:
+    msg: "Container pihole is running"
+  when: container_info.container.State.Status == "running"
+
+- name: Display failure message
+  debug:
+    msg: "Container pihole is not running after {{ max_retries * 30 }} seconds"
+  when: container_info.container.State.Status != "running"
