@@ -16,12 +16,14 @@
     src: hostname.j2
     dest: /etc/hostname
   become: true
+  register: hostname_changed
 
 - name: Configure hosts file
   template:
     src: etc_hosts.j2
     dest: /etc/hosts
   become: true
+  register: hosts_file_changed
 
 # Reboot the new host and wait it out
 - name: Reboot the new host
@@ -38,7 +40,7 @@
         delay: 10
         timeout: 300
         sleep: 5
-  
+  when: hostname_changed.changed or hosts_file_changed.changed
   rescue:   
     - name: Notify if the reboot failed
       debug:
