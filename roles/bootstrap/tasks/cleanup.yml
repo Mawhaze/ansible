@@ -21,7 +21,7 @@
           delay: 10
           timeout: 300
           sleep: 5
-  when: reboot_required_file.stat.exists
+  when: reboot_required_file.exists
   become: true
   rescue:   
     - name: Notify if the reboot failed
