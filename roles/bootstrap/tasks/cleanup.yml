@@ -15,13 +15,14 @@
           msg: "Rebooting incase of pending updates"
           post_reboot_delay: 30
           test_command: uptime
+        when: reboot_required_file.stat.exists
 
       - name: Wait for the host 
         wait_for_connection:
           delay: 10
           timeout: 300
           sleep: 5
-  when: reboot_required_file.exists
+        when: reboot_required_file.stat.exists
   become: true
   rescue:   
     - name: Notify if the reboot failed
