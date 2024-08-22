@@ -32,6 +32,7 @@
         name: "{{ proxmox_name }}"
         state: current
       register: vm_info
+      delegate_to: localhost
 
     - name: Remove specific tag and update VM
       community.general.proxmox_kvm:
@@ -42,3 +43,4 @@
         tags: "{{ vm_info.proxmox_kvm.tags.split(',') | reject('equalto', 'bootstrap') | join(',') }}"
         update: yes
       when: vm_info.proxmox_kvm.tags is defined
+      delegate_to: localhost
