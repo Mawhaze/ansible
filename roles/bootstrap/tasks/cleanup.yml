@@ -23,28 +23,28 @@
       debug:
         msg: "Server failed to reboot, or did not come back up in time"
       
-# - name: Remove bootstrap tags
-#   block:
-#     - name: Get current VM tags
-#       community.general.proxmox_kvm:
-#         api_host: "{{ proxmox_api_host }}"
-#         api_user: "{{ proxmox_api_user }}"
-#         api_password: "{{ proxmox_api_password }}"
-#         name: "{{ proxmox_name }}"
-#         state: current
-#       register: vm_info
-#       delegate_to: localhost
+- name: Remove bootstrap tags
+  block:
+    - name: Get current VM tags
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_password: "{{ proxmox_api_password }}"
+        name: "{{ proxmox_name }}"
+        state: current
+      register: vm_info
+      delegate_to: localhost
 
-#     - name: DEBUG | Show vm info
-#       debug:
-#         var: vm_info
+    - name: DEBUG | Show vm info
+      debug:
+        msg: "{{ vm_info.results }}"
 
-- name: Remove bootstrap tag and update VM
-  community.general.proxmox_kvm:
-    api_host: "{{ proxmox_api_host }}"
-    api_user: "{{ proxmox_api_user }}"
-    api_password: "{{ proxmox_api_password }}"
-    name: "{{ proxmox_name }}"
-    tags: "{{ vm_info.proxmox_kvm.tags.split(',') | reject('equalto', 'bootstrap') | join(',') }}"
-    update: yes
-  delegate_to: localhost
+    - name: Remove bootstrap tag and update VM
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_password: "{{ proxmox_api_password }}"
+        name: "{{ proxmox_name }}"
+        tags: "{{ vm_info.proxmox_kvm.tags.split(',') | reject('equalto', 'bootstrap') | join(',') }}"
+        update: true
+      delegate_to: localhost
