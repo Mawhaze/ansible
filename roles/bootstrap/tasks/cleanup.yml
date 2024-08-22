@@ -59,4 +59,5 @@
         name: "{{ proxmox_name }}"
         tags: "{{ vm_info.json.data.tags.split(';') | reject('equalto', 'bootstrap') | join(';') }}"
         update: true
+        node: "{{ proxmox_node }}"
       delegate_to: localhost
