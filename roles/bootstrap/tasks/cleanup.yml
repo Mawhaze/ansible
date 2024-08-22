@@ -33,6 +33,7 @@
         state: current
       register: vm_info
       delegate_to: localhost
+      become: false
 
     - name: Remove specific tag and update VM
       community.general.proxmox_kvm:
@@ -44,3 +45,4 @@
         update: yes
       when: vm_info.proxmox_kvm.tags is defined
       delegate_to: localhost
+      become: false
