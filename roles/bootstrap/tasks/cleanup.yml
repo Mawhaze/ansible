@@ -30,7 +30,7 @@
         api_user: "{{ proxmox_api_user }}"
         api_password: "{{ proxmox_api_password }}"
         name: "{{ proxmox_name }}"
-        state: current_config
+        state: current
       register: vm_info
 
     - name: Remove specific tag and update VM
