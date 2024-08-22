@@ -19,10 +19,18 @@
     name: proxmox
     tasks_from: api_auth.yml
 
-- name: Include VM info
-  include_role:
-    name: proxmox
-    tasks_from: vm_info.yml
+- name: Get VM details from Proxmox API
+  uri:
+    url: "{{ proxmox_cluster_url }}/api2/json/nodes/{{ item.node }}/qemu/{{ item.vmid }}/agent/network-get-interfaces"
+    method: GET
+    headers:
+      Cookie: "PVEAuthCookie={{ proxmox_ticket.json.data.ticket }}"
+      CSRFPreventionToken: "{{ proxmox_ticket.json.data.CSRFPreventionToken }}"
+    validate_certs: true
+  register: vm_network_info
+  loop: "{{ vm_info.proxmox_vms }}"
+  failed_when: false
+  no_log: true
 
 - name: Extract IP addresses
   set_fact:

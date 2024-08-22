@@ -30,14 +30,20 @@
         name: proxmox
         tasks_from: api_auth.yml
     
-    - name: Include VM info
-      include_role:
-        name: proxmox
-        tasks_from: vm_info.yml
+    - name: Get VM info
+      uri:
+        url: "{{ proxmox_cluster_url }}/api2/json/nodes/{{ proxmox_node }}/qemu/{{ proxmox_vm_id }}/config"
+        method: GET
+        headers:
+          Cookie: "PVEAuthCookie={{ proxmox_ticket.json.data.ticket }}"
+          CSRFPreventionToken: "{{ proxmox_ticket.json.data.CSRFPreventionToken }}"
+        validate_certs: true
+        return_content: yes
+      register: vm_info
 
     - name: DEBUG | Show vm info
       debug:
-        msg: "{{ vm_info.results }}"
+        msg: "{{ vm_info }}"
 
     - name: Remove bootstrap tag and update VM
       community.general.proxmox_kvm:
@@ -45,6 +51,6 @@
         api_user: "{{ proxmox_api_user }}"
         api_password: "{{ proxmox_api_password }}"
         name: "{{ proxmox_name }}"
-        tags: "{{ vm_info.proxmox_kvm.tags.split(',') | reject('equalto', 'bootstrap') | join(',') }}"
+        tags: "{{ vm_info.results.tags.split(';') | reject('equalto', 'bootstrap') | join(';') }}"
         update: true
       delegate_to: localhost
