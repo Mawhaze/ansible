@@ -47,9 +47,9 @@
         return_content: yes
       register: vm_info
 
-    - name: DEBUG | Show vm info
-      debug:
-        msg: "{{ vm_info }}"
+    # - name: DEBUG | Show vm info
+    #   debug:
+    #     msg: "{{ vm_info }}"
 
     - name: Remove bootstrap tag and update VM
       community.general.proxmox_kvm:
@@ -57,6 +57,6 @@
         api_user: "{{ proxmox_api_user }}"
         api_password: "{{ proxmox_api_password }}"
         name: "{{ proxmox_name }}"
-        tags: "{{ vm_info.results.tags.split(';') | reject('equalto', 'bootstrap') | join(';') }}"
+        tags: "{{ vm_info.json.data.tags.split(';') | reject('equalto', 'bootstrap') | join(';') }}"
         update: true
       delegate_to: localhost
