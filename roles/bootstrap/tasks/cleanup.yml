@@ -25,15 +25,15 @@
       
 - name: Remove bootstrap tags
   block:
-    - name: Get current VM tags
-      community.general.proxmox_kvm:
-        api_host: "{{ proxmox_api_host }}"
-        api_user: "{{ proxmox_api_user }}"
-        api_password: "{{ proxmox_api_password }}"
-        name: "{{ proxmox_name }}"
-        state: current
-      register: vm_info
-      delegate_to: localhost
+    - name: Include API auth
+      include_role:
+        name: proxmox
+        tasks_from: api_auth.yml
+    
+    - name: Include VM info
+      include_role:
+        name: proxmox
+        tasks_from: vm_info.yml
 
     - name: DEBUG | Show vm info
       debug:

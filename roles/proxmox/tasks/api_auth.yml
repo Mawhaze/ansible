@@ -1,0 +1,12 @@
+---
+- name: Get Proxmox API ticket
+  uri:
+    url: "{{ proxmox_cluster_url }}/api2/json/access/ticket"
+    method: POST
+    body_format: json
+    body:
+      username: "{{ proxmox_api_user }}"
+      password: "{{ proxmox_api_password }}"
+    headers:
+      Content-Type: "application/json"
+  register: proxmox_ticket

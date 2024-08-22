@@ -14,39 +14,15 @@
 #   ansible.builtin.debug:
 #     msg: "{{ vm_info }}"
 
-- name: Get Proxmox API ticket
-  uri:
-    url: "{{ proxmox_cluster_url }}/api2/json/access/ticket"
-    method: POST
-    body_format: json
-    body:
-      username: "{{ proxmox_api_user }}"
-      password: "{{ proxmox_api_password }}"
-    headers:
-      Content-Type: "application/json"
-  register: proxmox_ticket
+- name: Include API auth
+  include_role:
+    name: proxmox
+    tasks_from: api_auth.yml
 
-# - name: DEBUG | Display Proxmox ticket
-#   ansible.builtin.debug:
-#     msg: "{{ proxmox_ticket }}"
-
-- name: Get VM details from Proxmox API
-  uri:
-    url: "{{ proxmox_cluster_url }}/api2/json/nodes/{{ item.node }}/qemu/{{ item.vmid }}/agent/network-get-interfaces"
-    method: GET
-    headers:
-      Cookie: "PVEAuthCookie={{ proxmox_ticket.json.data.ticket }}"
-      CSRFPreventionToken: "{{ proxmox_ticket.json.data.CSRFPreventionToken }}"
-    validate_certs: true
-  register: vm_network_info
-  loop: "{{ vm_info.proxmox_vms }}"
-  failed_when: false
-  no_log: true
-
-# - name: DEBUG | Display VM network info
-#   ansible.builtin.debug:  
-#     msg: "{{ item }}"
-#   loop: "{{ vm_network_info.results }}"
+- name: Include VM info
+  include_role:
+    name: proxmox
+    tasks_from: vm_info.yml
 
 - name: Extract IP addresses
   set_fact:
