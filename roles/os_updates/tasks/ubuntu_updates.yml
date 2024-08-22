@@ -14,11 +14,11 @@
   register: wait_for_lock
   failed_when: wait_for_lock.rc != 0
   changed_when: false
-  become: yes
+  become: true
 
 - name: Update package cache
   ansible.builtin.shell: apt-get update
-  become: yes
+  become: true
   register: update_cache
 
 - name: List upgradable packages
@@ -33,7 +33,7 @@
   ansible.builtin.shell: apt-get upgrade -y
   environment:
     DEBIAN_FRONTEND: noninteractive
-  become: yes
+  become: true
   register: upgrade_results
   until: upgrade_results is succeeded
   retries: 10

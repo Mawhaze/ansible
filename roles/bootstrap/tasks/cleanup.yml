@@ -1,0 +1,44 @@
+---
+- name: Include variables
+  include_vars: proxmox_vars.yml
+
+- name: Reboot the host
+  block:
+      - name: Reboot the new host
+        reboot:
+          reboot_timeout: 300
+          msg: "Rebooting incase of pending updates"
+          post_reboot_delay: 30
+          test_command: uptime
+
+      - name: Wait for the host 
+        wait_for_connection:
+          delay: 10
+          timeout: 300
+          sleep: 5
+  when: hostname_changed.changed or hosts_file_changed.changed
+  rescue:   
+    - name: Notify if the reboot failed
+      debug:
+        msg: "Server failed to reboot, or did not come back up in time"
+      
+- name: Remove bootstrap tags
+  block:
+    - name: Get current VM tags
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_password: "{{ proxmox_api_password }}"
+        name: "{{ proxmox_name }}"
+        state: current_config
+      register: vm_info
+
+    - name: Remove specific tag and update VM
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_password: "{{ proxmox_api_password }}"
+        name: "{{ proxmox_name }}"
+        tags: "{{ vm_info.proxmox_kvm.tags.split(',') | reject('equalto', 'bootstrap') | join(',') }}"
+        update: yes
+      when: vm_info.proxmox_kvm.tags is defined
