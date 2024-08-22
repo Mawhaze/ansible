@@ -13,7 +13,6 @@
   hosts: bootstrap_host
   gather_facts: false
   remote_user: sa-ansible
-  become: yes
 
   roles:
     - bootstrap

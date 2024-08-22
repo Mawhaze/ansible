@@ -1,5 +1,6 @@
 ---
 - name: Provision users and services
+  become: true
   block:
   - name: Gather Facts
     setup:
@@ -25,6 +26,6 @@
       - ansible_facts['distribution'] == "Ubuntu"
       - "'service_docker' in group_names"
 
-  - name: Cleanup
-    include_tasks: cleanup.yml
-    when: ansible_facts['distribution'] == "Ubuntu"
+- name: Cleanup
+  include_tasks: cleanup.yml
+  when: ansible_facts['distribution'] == "Ubuntu"

@@ -17,6 +17,7 @@
           timeout: 300
           sleep: 5
   when: hostname_changed.changed or hosts_file_changed.changed
+  become: true
   rescue:   
     - name: Notify if the reboot failed
       debug:
@@ -33,7 +34,6 @@
         state: current
       register: vm_info
       delegate_to: localhost
-      become: false
 
     - name: Remove specific tag and update VM
       community.general.proxmox_kvm:
@@ -45,4 +45,3 @@
         update: yes
       when: vm_info.proxmox_kvm.tags is defined
       delegate_to: localhost
-      become: false
