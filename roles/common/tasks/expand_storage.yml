@@ -16,11 +16,11 @@
   register: pv_device
 
 - name: Get total disk size
-  shell: lsblk -ndo SIZE {{ pv_device.stdout }} | sed 's/G//'
+  shell: lsblk -bno SIZE {{ pv_device.stdout }} | awk '{print $1/1024/1024/1024}'
   register: total_disk_size
 
 - name: Get current LV size
-  shell: lvs --noheadings --units g -o lv_size {{ root_device.stdout }} | tr -d ' G'
+  shell: lvs --noheadings --units b -o lv_size {{ root_device.stdout }} | awk '{print $1/1024/1024/1024}'
   register: current_lv_size
 
 - name: Calculate available space
@@ -29,7 +29,15 @@
 
 - name: Check if expansion is needed
   set_fact:
-    expansion_needed: "{{ available_space | float > 0 }}"
+    expansion_needed: "{{ available_space | float > 1 }}"
+
+- name: Extend partition to use all available space
+  parted:
+    device: "{{ pv_device.stdout }}"
+    number: 1
+    part_end: "100%"
+    resize: yes
+  when: expansion_needed
 
 - name: Extend physical volume
   command: pvresize {{ pv_device.stdout }}
@@ -39,15 +47,19 @@
   lvol:
     vg: "{{ vg_name.stdout }}"
     lv: "{{ lv_name.stdout }}"
-    size: 100%VG
+    size: +100%FREE
   when: expansion_needed
 
 - name: Resize filesystem
   filesystem:
     fstype: "{{ ansible_mounts[0].fstype }}"
     dev: "{{ root_device.stdout }}"
-    resizefs: yes
+    resize: yes
   when: expansion_needed
+
+- name: Get final LV size
+  shell: lvs --noheadings --units g -o lv_size {{ root_device.stdout }} | tr -d ' G'
+  register: final_lv_size
 
 - name: Display results
   debug:
@@ -56,7 +68,8 @@
       - "Volume Group: {{ vg_name.stdout }}"
       - "Logical Volume: {{ lv_name.stdout }}"
       - "Physical Volume: {{ pv_device.stdout }}"
-      - "Total disk size: {{ total_disk_size.stdout }}G"
-      - "Initial LV size: {{ current_lv_size.stdout }}G"
-      - "Available space: {{ available_space }}G"
+      - "Total disk size: {{ total_disk_size.stdout | float | round(2) }}G"
+      - "Initial LV size: {{ current_lv_size.stdout | float | round(2) }}G"
+      - "Available space: {{ available_space | float | round(2) }}G"
       - "Expansion performed: {{ expansion_needed }}"
+      - "Final LV size: {{ final_lv_size.stdout | float | round(2) }}G"
