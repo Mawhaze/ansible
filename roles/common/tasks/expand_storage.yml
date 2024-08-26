@@ -4,11 +4,11 @@
   register: root_device
 
 - name: Get LVM volume group name
-  shell: lvs --noheadings -o vg_name {{ root_device.stdout }}
+  shell: lvs --noheadings -o vg_name {{ root_device.stdout }} | tr -d ' '
   register: vg_name
 
 - name: Get LVM logical volume name
-  shell: lvs --noheadings -o lv_name {{ root_device.stdout }}
+  shell: lvs --noheadings -o lv_name {{ root_device.stdout }} | tr -d ' '
   register: lv_name
 
 - name: Get physical volume device
