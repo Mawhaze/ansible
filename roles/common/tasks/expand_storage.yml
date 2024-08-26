@@ -46,7 +46,7 @@
   filesystem:
     fstype: "{{ ansible_mounts[0].fstype }}"
     dev: "{{ root_device.stdout }}"
-    resize: yes
+    resizefs: yes
   when: expansion_needed
 
 - name: Display results
