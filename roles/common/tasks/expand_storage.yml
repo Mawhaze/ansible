@@ -25,7 +25,7 @@
 
 - name: Calculate available space
   set_fact:
-    available_space: "{{ (total_disk_size.stdout | float) - (current_partition_size.stdout | float) }}"
+    available_space: "{{ (total_disk_size.stdout | float) - (current_lv_size.stdout | float) }}"
 
 - name: Check if expansion is needed
   set_fact:
