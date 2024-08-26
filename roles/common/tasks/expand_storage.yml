@@ -1,0 +1,62 @@
+---
+- name: Get root partition device
+  shell: df -h / | awk 'NR==2 {print $1}'
+  register: root_device
+
+- name: Get LVM volume group name
+  shell: lvs --noheadings -o vg_name {{ root_device.stdout }}
+  register: vg_name
+
+- name: Get LVM logical volume name
+  shell: lvs --noheadings -o lv_name {{ root_device.stdout }}
+  register: lv_name
+
+- name: Get physical volume device
+  shell: pvs --noheadings -o pv_name | tr -d ' '
+  register: pv_device
+
+- name: Get total disk size
+  shell: lsblk -ndo SIZE {{ pv_device.stdout }} | sed 's/G//'
+  register: total_disk_size
+
+- name: Get current LV size
+  shell: lvs --noheadings --units g -o lv_size {{ root_device.stdout }} | tr -d ' G'
+  register: current_lv_size
+
+- name: Calculate available space
+  set_fact:
+    available_space: "{{ (total_disk_size.stdout | float) - (current_partition_size.stdout | float) }}"
+
+- name: Check if expansion is needed
+  set_fact:
+    expansion_needed: "{{ available_space | float > 0 }}"
+
+- name: Extend physical volume
+  command: pvresize {{ pv_device.stdout }}
+  when: expansion_needed
+
+- name: Extend logical volume
+  lvol:
+    vg: "{{ vg_name.stdout }}"
+    lv: "{{ lv_name.stdout }}"
+    size: 100%VG
+  when: expansion_needed
+
+- name: Resize filesystem
+  filesystem:
+    fstype: "{{ ansible_mounts[0].fstype }}"
+    dev: "{{ root_device.stdout }}"
+    resize: yes
+  when: expansion_needed
+
+- name: Display results
+  debug:
+    msg: 
+      - "Root device: {{ root_device.stdout }}"
+      - "Volume Group: {{ vg_name.stdout }}"
+      - "Logical Volume: {{ lv_name.stdout }}"
+      - "Physical Volume: {{ pv_device.stdout }}"
+      - "Total disk size: {{ total_disk_size.stdout }}G"
+      - "Initial LV size: {{ current_lv_size.stdout }}G"
+      - "Available space: {{ available_space }}G"
+      - "Expansion performed: {{ expansion_needed }}"

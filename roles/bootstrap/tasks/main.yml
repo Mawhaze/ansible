@@ -8,6 +8,11 @@
   - name: Set up basic host information
     include_tasks: set_host_info.yml
 
+  - name: Expand Storage
+    include_role:
+      name: common
+      tasks_from: expand_storage.yml
+
   - name: Initial updates
     include_role:
       name: os_updates
