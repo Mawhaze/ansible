@@ -31,6 +31,7 @@
 - name: Extract partition number from pv_device
   set_fact:
     partition_number: "{{ pv_device.stdout | regex_search('([0-9]+)$') }}"
+
 # Expand storage to use all available space
 - name: Update partition table
   command: partprobe {{ disk_name }}
