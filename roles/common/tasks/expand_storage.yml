@@ -2,11 +2,11 @@
 # Expand the base disk
 - name: Get base disk name
   shell: lsblk -ndo NAME | head -n1
-  register: disk_device
+  register: disk_name
 
 - name: Resize base disk
   parted:
-    device: "{{ disk_device.stdout }}"
+    device: "/dev/{{ disk_name.stdout }}"
     number: 1
     part_end: "100%"
     resize: yes
