@@ -1,17 +1,5 @@
 ---
-# Expand the base disk
-- name: Get base disk name
-  shell: lsblk -ndo NAME | head -n1
-  register: disk_name
-
-- name: Resize base disk
-  parted:
-    device: "/dev/{{ disk_name.stdout }}"
-    number: 1
-    part_end: "100%"
-    resize: yes
-
-# Get Partition info
+# Get disk and partition info
 - name: Get root partition device
   shell: df -h / | awk 'NR==2 {print $1}'
   register: root_device
@@ -36,55 +24,43 @@
   shell: lvs --noheadings --units b -o lv_size {{ root_device.stdout }} | awk '{print $1/1024/1024/1024}'
   register: current_lv_size
 
-# Check if expansion is needed
-- name: Calculate available space
+- name: Extract disk name from pv_device
   set_fact:
-    available_space: "{{ (total_disk_size.stdout | float) - (current_lv_size.stdout | float) }}"
+    disk_name: "{{ pv_device.stdout | regex_replace('([0-9]+)$', '') }}"
 
-- name: Check if expansion is needed
+- name: Extract partition number from pv_device
   set_fact:
-    expansion_needed: "{{ available_space | float > 1 }}"
-
+    partition_number: "{{ pv_device.stdout | regex_search('([0-9]+)$') }}"
 # Expand storage to use all available space
-- name: Extend partition to use all available space
-  parted:
-    device: "{{ pv_device.stdout }}"
-    number: 1
-    part_end: "100%"
-    resize: yes
-  when: expansion_needed
+- name: Update partition table
+  command: partprobe {{ disk_name }}
 
-- name: Extend physical volume
-  command: pvresize {{ pv_device.stdout }}
-  when: expansion_needed
+- name: Grow the root partition
+  command: growpart {{ disk_name }} {{ partition_number }}
+  register: growpart_result
+  failed_when: 
+    - growpart_result.rc != 0 
+    - "'NOCHANGE' not in growpart_result.stderr"
+  changed_when: growpart_result.rc == 0
 
-- name: Extend logical volume
+- name: Resize physical volume
+  command: pvresize {{ pv_device }}
+  when: growpart_result is changed
+
+- name: Resize logical volume
   lvol:
     vg: "{{ vg_name.stdout }}"
     lv: "{{ lv_name.stdout }}"
     size: +100%FREE
-  when: expansion_needed
+  when: growpart_result is changed
 
 - name: Resize filesystem
   filesystem:
-    fstype: "{{ ansible_mounts[0].fstype }}"
+    fstype: LVM
     dev: "{{ root_device.stdout }}"
-    resize: yes
-  when: expansion_needed
+    resizefs: true
+  when: growpart_result is changed
 
-- name: Get final LV size
-  shell: lvs --noheadings --units g -o lv_size {{ root_device.stdout }} | tr -d ' G'
-  register: final_lv_size
-
-- name: Display results
+- name: Print updated disk info
   debug:
-    msg: 
-      - "Root device: {{ root_device.stdout }}"
-      - "Volume Group: {{ vg_name.stdout }}"
-      - "Logical Volume: {{ lv_name.stdout }}"
-      - "Physical Volume: {{ pv_device.stdout }}"
-      - "Total disk size: {{ total_disk_size.stdout | float | round(2) }}G"
-      - "Initial LV size: {{ current_lv_size.stdout | float | round(2) }}G"
-      - "Available space: {{ available_space | float | round(2) }}G"
-      - "Expansion performed: {{ expansion_needed }}"
-      - "Final LV size: {{ final_lv_size.stdout | float | round(2) }}G"
+    msg: "{{ disk_name }}{{ partition_number }} now has {{ total_disk_size.stdout }} GB total disk space, with {{ current_lv_size.stdout }} GB allocated to the root partition"
