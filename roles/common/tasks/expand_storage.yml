@@ -4,6 +4,13 @@
   shell: lsblk -ndo NAME | head -n1
   register: disk_device
 
+- name: Resize base disk
+  parted:
+    device: "{{ disk_device.stdout }}"
+    number: 1
+    part_end: "100%"
+    resize: yes
+
 - name: Get root partition device
   shell: df -h / | awk 'NR==2 {print $1}'
   register: root_device
@@ -38,14 +45,6 @@
     expansion_needed: "{{ available_space | float > 1 }}"
 
 # Expand storage to use all available space
-- name: Resize base disk
-  parted:
-    device: "{{ disk_device.stdout }}"
-    number: 1
-    part_end: "100%"
-    resize: yes
-  when: expansion_needed
-
 - name: Extend partition to use all available space
   parted:
     device: "{{ pv_device.stdout }}"
