@@ -1,5 +1,5 @@
 ---
-# Gathere disk and partition info
+# Expand the base disk
 - name: Get base disk name
   shell: lsblk -ndo NAME | head -n1
   register: disk_device
@@ -11,6 +11,7 @@
     part_end: "100%"
     resize: yes
 
+# Get Partition info
 - name: Get root partition device
   shell: df -h / | awk 'NR==2 {print $1}'
   register: root_device
