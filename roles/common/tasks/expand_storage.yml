@@ -24,6 +24,10 @@
   set_fact:
     partition_number: "{{ pv_device.stdout | regex_search('([0-9]+)$') }}"
 
+- name: Get filesystem type
+  shell: lsblk -no FSTYPE {{ pv_device.stdout }}
+  register: fs_type
+
 # Expand storage to use all available space
 - name: Update partition table
   command: partprobe {{ disk_name }}
@@ -49,7 +53,7 @@
 
 - name: Resize filesystem
   filesystem:
-    fstype: lvm
+    fstype: "{{ fs_type.stdout }}"
     dev: "{{ root_device.stdout }}"
     resizefs: true
   when: growpart_result is changed

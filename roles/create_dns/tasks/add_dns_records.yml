@@ -31,3 +31,4 @@
     connect_timeout: 5
   delegate_to: "{{ pihole_host }}"
   become: true
+  when: dns_record_added.changed
