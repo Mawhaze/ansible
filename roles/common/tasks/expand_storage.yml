@@ -49,7 +49,7 @@
 
 - name: Resize filesystem
   filesystem:
-    fstype: LVM
+    fstype: lvm
     dev: "{{ root_device.stdout }}"
     resizefs: true
   when: growpart_result is changed
