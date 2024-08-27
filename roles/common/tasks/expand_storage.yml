@@ -16,14 +16,6 @@
   shell: pvs --noheadings -o pv_name | tr -d ' '
   register: pv_device
 
-- name: Get total disk size
-  shell: lsblk -bno SIZE {{ pv_device.stdout }} | awk '{print $1/1024/1024/1024}'
-  register: total_disk_size
-
-- name: Get current LV size
-  shell: lvs --noheadings --units b -o lv_size {{ root_device.stdout }} | awk '{print $1/1024/1024/1024}'
-  register: current_lv_size
-
 - name: Extract disk name from pv_device
   set_fact:
     disk_name: "{{ pv_device.stdout | regex_replace('([0-9]+)$', '') }}"
@@ -45,7 +37,7 @@
   changed_when: growpart_result.rc == 0
 
 - name: Resize physical volume
-  command: pvresize {{ pv_device }}
+  command: pvresize {{ pv_device.stdout }}
   when: growpart_result is changed
 
 - name: Resize logical volume
@@ -61,6 +53,15 @@
     dev: "{{ root_device.stdout }}"
     resizefs: true
   when: growpart_result is changed
+
+# Gather updated disk info
+- name: Get total disk size
+  shell: lsblk -bno SIZE {{ pv_device.stdout }} | awk '{print $1/1024/1024/1024}'
+  register: total_disk_size
+
+- name: Get current LV size
+  shell: lvs --noheadings --units b -o lv_size {{ root_device.stdout }} | awk '{print $1/1024/1024/1024}'
+  register: current_lv_size
 
 - name: Print updated disk info
   debug:
