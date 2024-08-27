@@ -25,7 +25,7 @@
     partition_number: "{{ pv_device.stdout | regex_search('([0-9]+)$') }}"
 
 - name: Get filesystem type
-  shell: lsblk -no FSTYPE {{ pv_device.stdout }}
+  shell: lsblk -no FSTYPE {{ disk_name }}
   register: fs_type
 
 # Expand storage to use all available space
