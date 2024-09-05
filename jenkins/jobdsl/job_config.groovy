@@ -167,6 +167,11 @@ pipeline {
                   mawhaze/ansible:latest \
                   ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/ubuntu/test_k8s.yml'
               )
+            }
+        }
+    }
+  }
+}
       """)
     }
   }
