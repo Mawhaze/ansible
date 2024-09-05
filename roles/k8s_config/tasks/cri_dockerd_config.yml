@@ -7,7 +7,7 @@
 
 - name: Install CRI-Dockerd
   apt:
-    deb: /tmp/cri-dockerd_{{ cri_dockerd_version }}-0.ubuntu-jammy_amd64.deb
+    deb: /tmp/cri-dockerd_{{ docker_cri_version }}-0.ubuntu-jammy_amd64.deb
     state: present
     update_cache: yes
 
