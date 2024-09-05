@@ -21,13 +21,15 @@
     src: cri-docker.socket.j2
     dest: /etc/systemd/system/cri-docker.socket
   
-- name: Start and enable cri-dockerd
+- name: Start and enable cri-dockerd service
   systemd:
-    name: 
-      - "{{ item }}"
+    name: cri-docker
     enabled: yes
     state: started
     daemon_reload: yes
-  with_items:
-    - cri-docker
-    - cri-docker.socket
+
+- name: Start and enable cri-dockerd socket
+  systemd:
+    name: cri-docker
+    enabled: yes
+    state: started
