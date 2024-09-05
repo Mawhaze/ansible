@@ -2,4 +2,4 @@
 - name: Create users
   include_role:
     name: common
-    tasks_from: ubuntu_sa_users.yml
+    tasks_from: create_ubuntu_users.yml

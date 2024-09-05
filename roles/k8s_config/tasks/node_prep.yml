@@ -21,8 +21,8 @@
 - name: Install k8s packages
   apt:
     name: "{{ item }}={{ k8s_version }}-00"
-  state: present
-  update_cache: yes
+    state: present
+    update_cache: yes
   with_items:
     - "{{ k8s_packages }}"
 
