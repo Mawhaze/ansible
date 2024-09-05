@@ -3,7 +3,7 @@
 - name: Create k8s user
   include_role:
     name: common
-    tasks_from: ubuntu_sa_user.yml
+    tasks_from: create_ubuntu_users.yml
 
 # Configure k8s nodes as sa-k8s
 - name: Create k8s cluster
