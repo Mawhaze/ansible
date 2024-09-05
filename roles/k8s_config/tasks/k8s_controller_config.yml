@@ -3,7 +3,7 @@
   aws_ssm_parameter_info:
     name: "/k8s/join-command"
   register: ssm_join_command
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Initialize k8s controller
   block:
@@ -25,7 +25,7 @@
       copy:
         src: /etc/kubernetes/admin.conf
         dest: $HOME/.kube/config
-        remote_src: yes
+        remote_src: true
         owner: "{{ ansible_user }}"
 
     - name: Install Flannel network plugin

@@ -8,6 +8,7 @@
 # Configure k8s nodes as sa-k8s
 - name: Create k8s cluster
   become_user: sa-k8s
+  become: true
   block:
   - name: Prep k8s nodes
     include_tasks: node_prep.yml
