@@ -1,8 +1,8 @@
 ---
 - name: Download CRI-Dockerd
   get_url:
-    url: "https://github.com/Mirantis/cri-dockerd/releases/download/v{{ cri_dockerd_version }}/cri-dockerd_{{ cri_dockerd_version }}-0.ubuntu-jammy_amd64.deb"
-    dest: /tmp/cri-dockerd_{{ cri_dockerd_version }}-0.ubuntu-jammy_amd64.deb
+    url: "https://github.com/Mirantis/cri-dockerd/releases/download/v{{ docker_cri_version }}/cri-dockerd_{{ docker_cri_version }}-0.ubuntu-jammy_amd64.deb"
+    dest: /tmp/cri-dockerd_{{ docker_cri_version }}-0.ubuntu-jammy_amd64.deb
     mode: 0644
 
 - name: Install CRI-Dockerd
