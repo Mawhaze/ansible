@@ -1,7 +1,7 @@
 ---
 - name: Check for existing join command in AWS SSM Parameter Store
   aws_ssm_parameter_info:
-    name: "/k8s/join-command"
+    name: "/ansible/k8s/join-command"
   register: ssm_join_command
   ignore_errors: true
 

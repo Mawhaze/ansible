@@ -5,14 +5,14 @@
     name: common
     tasks_from: create_ubuntu_users.yml
 
-# Configure k8s nodes as sa-k8s
+# Configure k8s nodes
+- name: Prep k8s nodes
+  include_tasks: node_prep.yml
+
 - name: Create k8s cluster
   become_user: sa-k8s
   become: true
   block:
-  - name: Prep k8s nodes
-    include_tasks: node_prep.yml
-
   - name: Run k8s controller config
     include_tasks: k8s_controller_config.yml
     when: 
