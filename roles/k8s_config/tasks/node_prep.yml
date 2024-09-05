@@ -8,15 +8,17 @@
 - name: Configure CRI-Dockerd
   include_tasks: cri_dockerd_config.yml
 
-- name: Add k8s GPG key
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+- name: Add k8s apt key
+  get_url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
+  dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+  mode: 0644
+  force: true
 
 - name: Add k8s repository
   apt_repository:
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}] /"
     state: present
+    update_cache: yes
 
 - name: Install k8s packages
   apt:
