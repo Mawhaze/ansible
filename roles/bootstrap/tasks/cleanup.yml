@@ -1,7 +1,4 @@
 ---
-- name: Include variables
-  include_vars: proxmox_vars.yml
-
 - name: Reboot the host
   block:
       - name: Check if reboot is required

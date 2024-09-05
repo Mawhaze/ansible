@@ -1,7 +1,4 @@
 ---
-- name: Include variables
-  include_vars: users.yml
-
 - name: Update cache and install git
   apt:
     update_cache: yes

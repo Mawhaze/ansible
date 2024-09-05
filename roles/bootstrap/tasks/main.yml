@@ -26,7 +26,9 @@
     when: ansible_facts['distribution'] == "Ubuntu"
 
   - name: Configure Docker
-    include_tasks: docker_setup.yml
+    include_role: 
+      name: common
+      tasks_from: docker_setup.yml
     when: 
       - ansible_facts['distribution'] == "Ubuntu"
       - "'service_docker' in group_names"

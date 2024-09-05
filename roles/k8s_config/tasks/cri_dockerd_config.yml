@@ -1,0 +1,31 @@
+---
+- name: Download CRI-Dockerd
+  get_url:
+    url: "https://github.com/Mirantis/cri-dockerd/releases/download/v{{ cri_dockerd_version }}/cri-dockerd_{{ cri_dockerd_version }}-0.ubuntu-jammy_amd64.deb"
+    dest: /tmp/cri-dockerd_{{ cri_dockerd_version }}-0.ubuntu-jammy_amd64.deb
+    mode: 0644
+
+- name: Install CRI-Dockerd
+  apt:
+    deb: /tmp/cri-dockerd_{{ cri_dockerd_version }}-0.ubuntu-jammy_amd64.deb
+    state: present
+    update_cache: yes
+
+- name: Create cri-docker.service
+  template:
+    src: cri-docker.service.j2
+    dest: /etc/systemd/system/cri-docker.service
+
+- name: Create cri-docker.socket
+  template:
+    src: cri-docker.socket.j2
+    dest: /etc/systemd/system/cri-docker.socket
+  
+- name: Start and enable cri-dockerd
+  systemd:
+    name: 
+    - cri-docker
+    - cri-docker.socket
+    enabled: yes
+    state: started
+    daemon_reload: yes

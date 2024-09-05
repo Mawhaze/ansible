@@ -1,0 +1,8 @@
+---
+- name: K8s config test playbook
+  hosts: service_k8s
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: k8s_config

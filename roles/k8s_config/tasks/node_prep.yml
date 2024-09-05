@@ -1,0 +1,63 @@
+---
+# Install required packages
+- name: Configure Docker
+  include_role: 
+    name: common
+    tasks_from: docker_setup.yml
+
+- name: Configure CRI-Dockerd
+  include_tasks: cri_dockerd_config.yml
+
+- name: Add k8s GPG key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add k8s repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+
+- name: Install k8s packages
+  apt:
+    name: "{{ item }}={{ k8s_version }}-00"
+  state: present
+  update_cache: yes
+  with_items:
+    - "{{ k8s_packages }}"
+
+- name: Hold k8s packages at current version
+  apt:
+    name: "{{ item }}"
+    state: held
+  with_items:
+    - "{{ k8s_packages }}"
+
+# Host configs for k8s nodes
+- name: Disable swap
+  command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+- name: Remove swap /etc/fstab entry
+  lineinfile:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    state: absent
+
+- name: Load kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - overlay
+    - br_netfilter
+
+- name: Configure stsctl
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+  loop:
+    - net.ipv4.ip_forward
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables

@@ -1,5 +1,0 @@
----
-proxmox_api_user: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-user', region='us-west-2', decrypt='true') }}"
-proxmox_api_password: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-password', region='us-west-2', decrypt='true') }}"
-proxmox_cluster_url: "{{ lookup('aws_ssm', '/ansible/proxmox/cluster_url', region='us-west-2', decrypt='true') }}"
-proxmox_api_host: "{{ proxmox_cluster_url | regex_replace('^https://', '') | regex_replace(':8006$', '') }}"

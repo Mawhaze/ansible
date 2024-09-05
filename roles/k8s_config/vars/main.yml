@@ -1,0 +1,15 @@
+---
+users:
+  - sa-k8s
+
+docker_users:
+  - sa-k8s
+
+docker_cri_version: '0.3.15.3'
+
+k8s_packages:
+  - kubelet
+  - kubeadm
+  - kubectl
+
+k8s_version: '1.31.1'

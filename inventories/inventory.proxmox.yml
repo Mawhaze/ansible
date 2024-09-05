@@ -11,7 +11,8 @@ compose:
 keyed_groups:
   - key: proxmox_tags_parsed
 groups:
+  bootstrap_host: "'bootstrap' in (proxmox_tags_parsed|list)"
   os_ubuntu: "'ubuntu' in (proxmox_tags_parsed|list)"
   service_docker: "'docker' in (proxmox_tags_parsed|list)"
   service_jenkins: "'jenkins' in (proxmox_tags_parsed|list)"
-  bootstrap_host: "'bootstrap' in (proxmox_tags_parsed|list)"
+  service_k8s: "'k8s' in (proxmox_tags_parsed|list)"
