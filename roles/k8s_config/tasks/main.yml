@@ -4,15 +4,16 @@
   include_role:
     name: common
     tasks_from: create_ubuntu_users.yml
-  apply:
-    become: true
+    apply:
+      become: true
 
 # Configure k8s nodes
 - name: Prep k8s nodes
   become: true
-  include_tasks: node_prep.yml
-  apply:
-    become: true
+  include_tasks: 
+    file: node_prep.yml
+    apply:
+      become: true
 
 - name: Run k8s controller config
   include_tasks: k8s_controller_config.yml
