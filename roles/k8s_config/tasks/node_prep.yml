@@ -32,7 +32,7 @@
 - name: Hold k8s packages at current version
   dpkg_selections:
     name: "{{ item }}"
-    selection: held
+    selection: hold
   with_items:
     - "{{ k8s_packages }}"
 
