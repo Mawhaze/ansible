@@ -3,11 +3,13 @@
   community.aws.ssm_parameter:
     name: "/ansible/k8s/join-command"
   register: ssm_join_command
+  delegate_to: localhost
   ignore_errors: true
 
 - name: Initialize k8s controller
   become_user: sa-k8s
   become: true
+  become_method: sudo
   block:
     - name: Initialize Kubernetes cluster
       command: >
