@@ -13,7 +13,7 @@ git_user_keys:
     private_key: "{{ lookup('aws_ssm', '/ansible/proxmox/git_private_key', region='us-west-2', decrypt='true') }}"
 
 git_user: "{{ lookup('aws_ssm', '/ansible/proxmox/git_user', region='us-west-2', decrypt='true') }}"
-git_email: "{{ lookup('aws_ssm', '/ansible/proxmox/git_email', region='us-west-1', decrypt='true') }}"
+git_email: "{{ lookup('aws_ssm', '/ansible/proxmox/git_email', region='us-west-2', decrypt='true') }}"
 
 proxmox_api_user: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-user', region='us-west-2', decrypt='true') }}"
 proxmox_api_password: "{{ lookup('aws_ssm', '/ansible/sa-ansible/proxmox-password', region='us-west-2', decrypt='true') }}"
