@@ -9,7 +9,6 @@
 - name: Initialize k8s controller
   become_user: sa-k8s
   become: true
-  become_method: sudo
   block:
     - name: Initialize Kubernetes cluster
       command: >
@@ -17,7 +16,7 @@
         --pod-network-cidr=10.244.0.0/16 
         --cri-socket unix:///var/run/cri-dockerd.sock
       args:
-        creates: /etc/kubernetes/admin.conf
+        creates: /tmp/k8s/admin.conf
 
     - name: Create .kube directory
       file:
@@ -27,7 +26,7 @@
 
     - name: Copy admin.conf to user's kube config
       copy:
-        src: /etc/kubernetes/admin.conf
+        src: /tmp/k8s/admin.conf
         dest: $HOME/.kube/config
         remote_src: true
         owner: "{{ ansible_user }}"
