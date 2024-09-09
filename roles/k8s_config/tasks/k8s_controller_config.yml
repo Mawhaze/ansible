@@ -1,6 +1,6 @@
 ---
 - name: Check for existing join command in AWS SSM Parameter Store
-  aws_ssm_parameter_info:
+  community.aws.ssm_parameter:
     name: "/ansible/k8s/join-command"
   register: ssm_join_command
   ignore_errors: true
@@ -36,8 +36,8 @@
       register: join_command
 
     - name: Store join command in AWS SSM Parameter Store
-      aws_ssm_parameter:
-        name: "/k8s/join-command"
+      community.aws.ssm_parameter:
+        name: "/ansible/k8s/join-command"
         value: "{{ join_command.stdout }} --control-plane --certificate-key {{ certificate_key.stdout }}"
         type: String
   when: ssm_join_command.failed or ssm_join_command.parameters | length == 0
