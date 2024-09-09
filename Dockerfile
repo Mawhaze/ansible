@@ -58,6 +58,7 @@ RUN . ansible-venv/bin/activate && \
 RUN . ansible-venv/bin/activate && \
     ansible-galaxy collection install community.general && \
     ansible-galaxy collection install amazon.aws && \
+    ansible-galaxy collection install community.aws && \
     ansible-galaxy collection install ansible.utils
 
 # Set the working directory

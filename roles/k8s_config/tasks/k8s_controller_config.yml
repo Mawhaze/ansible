@@ -6,13 +6,19 @@
   delegate_to: localhost
   ignore_errors: true
 
+# Enabled for testing new cluster creation
+- name: DEBUG - Display ssm value
+  debug:
+    var: ssm_join_command
+  when: not ssm_join_command.failed
+
+# Create a new cluster
 - name: Initialize k8s controller
   become_user: sa-k8s
-  become: true
   block:
     - name: Initialize Kubernetes cluster
       command: >
-        kubeadm init 
+        sudo kubeadm init 
         --pod-network-cidr=10.244.0.0/16 
         --cri-socket unix:///var/run/cri-dockerd.sock
       args:
@@ -42,12 +48,11 @@
       community.aws.ssm_parameter:
         name: "/ansible/k8s/join-command"
         value: "{{ join_command.stdout }} --control-plane --certificate-key {{ certificate_key.stdout }}"
-        type: String
+        string_type: SecureString
   when: ssm_join_command.failed or ssm_join_command.parameters | length == 0
 
+# Join additional controllers
 - name: Join additional controller to the cluster
-  become_user: sa-k8s
-  become: true
   block:
     - name: Retrieve join command from AWS SSM Parameter Store
       set_fact:
