@@ -30,9 +30,9 @@
     - "{{ k8s_packages }}"
 
 - name: Hold k8s packages at current version
-  apt:
+  dpkg_selections:
     name: "{{ item }}"
-    state: held
+    selection: held
   with_items:
     - "{{ k8s_packages }}"
 
