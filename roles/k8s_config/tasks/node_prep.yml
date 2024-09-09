@@ -11,9 +11,8 @@
 - name: Add k8s apt key
   apt_key: 
     url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
-    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
-    mode: 0644
-    force: true
+    state: present
+    keyring: /etc/apt/keyrings/kubernetes-apt-keyring.asc
 
 - name: Add k8s repository
   apt_repository:
