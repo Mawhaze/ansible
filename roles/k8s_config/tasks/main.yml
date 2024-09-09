@@ -9,16 +9,12 @@
 - name: Prep k8s nodes
   include_tasks: node_prep.yml
 
-- name: Create k8s cluster
-  become_user: sa-k8s
-  become: true
-  block:
-  - name: Run k8s controller config
-    include_tasks: k8s_controller_config.yml
-    when: 
-      - "'k8s_controller' in proxmox_tags_parsed"
+- name: Run k8s controller config
+  include_tasks: k8s_controller_config.yml
+  when: 
+    - "'k8s_controller' in proxmox_tags_parsed"
 
-  - name: Run k8s worker config
-    include_tasks: k8s_worker_config.yml
-    when: 
-      - "'k8s_worker' in proxmox_tags_parsed"
+- name: Run k8s worker config
+  include_tasks: k8s_worker_config.yml
+  when: 
+    - "'k8s_worker' in proxmox_tags_parsed"

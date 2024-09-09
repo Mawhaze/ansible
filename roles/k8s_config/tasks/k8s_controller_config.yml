@@ -6,6 +6,8 @@
   ignore_errors: true
 
 - name: Initialize k8s controller
+  become_user: sa-k8s
+  become: true
   block:
     - name: Initialize Kubernetes cluster
       command: >
@@ -43,6 +45,8 @@
   when: ssm_join_command.failed or ssm_join_command.parameters | length == 0
 
 - name: Join additional controller to the cluster
+  become_user: sa-k8s
+  become: true
   block:
     - name: Retrieve join command from AWS SSM Parameter Store
       set_fact:
