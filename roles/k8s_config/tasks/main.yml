@@ -9,7 +9,6 @@
 
 # Configure k8s nodes
 - name: Prep k8s nodes
-  become: true
   include_tasks: 
     file: node_prep.yml
     apply:
