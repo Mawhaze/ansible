@@ -35,7 +35,6 @@
         src: /tmp/k8s/admin.conf
         dest: $HOME/.kube/config
         remote_src: true
-        owner: "{{ ansible_user }}"
 
     - name: Install Flannel network plugin
       command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
@@ -43,6 +42,10 @@
     - name: Get join command
       command: kubeadm token create --print-join-command
       register: join_command
+
+    - name: DEBUG - Display join command
+      debug:
+        var: join_command
 
     - name: Store join command in AWS SSM Parameter Store
       community.aws.ssm_parameter:
