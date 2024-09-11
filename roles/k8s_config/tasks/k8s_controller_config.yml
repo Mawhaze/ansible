@@ -15,6 +15,7 @@
 # Create a new cluster
 - name: Initialize k8s controller
   become_user: sa-k8s
+  become: true
   block:
     - name: Validate new controller node
       find:
@@ -40,7 +41,6 @@
         mode: '0755'
 
     - name: Copy admin.conf to user's kube config
-      become: true
       copy:
         src: /etc/kubernetes/admin.conf
         dest: /home/sa-k8s/.kube/config
