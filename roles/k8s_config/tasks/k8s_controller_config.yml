@@ -14,13 +14,10 @@
 
 # Create a new cluster
 - name: Initialize k8s controller
-  become_user: sa-k8s
-  become: true
-  become_method: sudo
   block:
     - name: Validate new controller node
       find:
-        paths: /home/sa-k8s/.kube
+        paths: /home/{{ k8s_user }}/.kube
         patterns: config
       register: kube_config_set
 
@@ -30,23 +27,29 @@
       when: kube_config_set.matched > 0
 
     - name: Initialize Kubernetes cluster
+      become: true
       command: >
         kubeadm init 
         --pod-network-cidr=10.244.0.0/16 
         --cri-socket unix:///var/run/cri-dockerd.sock
 
     - name: Create .kube directory
-      become: false
+      become: true
       file:
-        path: /home/sa-k8s/.kube
+        path: /home/{{ k8s_user }}/.kube
         state: directory
         mode: '0755'
+        owner: "{{ k8s_user }}"
+        group: "{{ k8s_user }}"
 
     - name: Copy admin.conf to user's kube config
+      become: true
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/sa-k8s/.kube/config
+        dest: /home/{{ k8s_user }}/.kube/config
         remote_src: true
+        owner: "{{ k8s_user }}"
+        group: "{{ k8s_user }}"
 
     - name: Install Flannel network plugin
       command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
