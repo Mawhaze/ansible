@@ -1,15 +1,16 @@
 ---
 - name: Check for existing join command in AWS SSM Parameter Store
   set_fact:
-    ssm_join_command: "{{ lookup('community.aws.ssm', '/ansible/k8s/join-command', region='us-west-2', decrypt='true') }}"
+    ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/join-command', region='us-west-2', decrypt='true') }}"
   delegate_to: localhost
+  register: ssm_join_result
   ignore_errors: true
 
 # Enabled for testing new cluster creation
 - name: DEBUG - Display ssm value
   debug:
     var: ssm_join_command
-  when: not ssm_join_command.failed
+  when: not ssm_join_result is succeeded
 
 # Create a new cluster
 - name: Initialize k8s controller
@@ -25,7 +26,7 @@
       fail:
         msg: "Controller is already configured"
       when: kube_config_set.matched > 0
-      
+
     - name: Initialize Kubernetes cluster
       command: >
         sudo kubeadm init 
