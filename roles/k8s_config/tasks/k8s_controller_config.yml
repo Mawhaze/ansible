@@ -1,8 +1,7 @@
 ---
 - name: Check for existing join command in AWS SSM Parameter Store
-  community.aws.ssm_parameter:
-    name: "/ansible/k8s/join-command"
-  register: ssm_join_command
+  set_fact:
+    ssm_join_command: "{{ lookup('community.aws.ssm', '/ansible/k8s/join-command', region='us-west-2', decrypt='true') }}"
   delegate_to: localhost
   ignore_errors: true
 
@@ -16,13 +15,22 @@
 - name: Initialize k8s controller
   become_user: sa-k8s
   block:
+    - name: Validate new controller node
+      find:
+        paths: $HOME/.kube
+        patterns: config
+      register: kube_config_set
+
+    - name: End playbook if controller is already configured
+      fail:
+        msg: "Controller is already configured"
+      when: kube_config_set.matched > 0
+      
     - name: Initialize Kubernetes cluster
       command: >
         sudo kubeadm init 
         --pod-network-cidr=10.244.0.0/16 
         --cri-socket unix:///var/run/cri-dockerd.sock
-      args:
-        creates: /tmp/k8s/admin.conf
 
     - name: Create .kube directory
       file:
@@ -32,7 +40,7 @@
 
     - name: Copy admin.conf to user's kube config
       copy:
-        src: /tmp/k8s/admin.conf
+        src: /etc/kubernetes/admin.conf
         dest: $HOME/.kube/config
         remote_src: true
 
@@ -46,6 +54,10 @@
     - name: DEBUG - Display join command
       debug:
         var: join_command
+
+    - name: Get certificate key
+      command: kubeadm init phase upload-certs --upload-certs
+      register: certificate_key
 
     - name: Store join command in AWS SSM Parameter Store
       community.aws.ssm_parameter:
@@ -64,11 +76,6 @@
     - name: Join the cluster as an additional controller
       command: "{{ join_command }}"
   when: not ssm_join_command.failed and ssm_join_command.parameters | length > 0
-
-- name: Get certificate key
-  command: kubeadm init phase upload-certs --upload-certs
-  register: certificate_key
-  when: ssm_join_command.failed or ssm_join_command.parameters | length == 0
 
 - name: Debug - Display join command
   debug:

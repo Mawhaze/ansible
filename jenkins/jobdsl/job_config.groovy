@@ -165,7 +165,6 @@ pipeline {
               sh(
                   'docker run -e AWS_ACCESS_KEY_ID=\$AWS_ACCESS_KEY_ID \
                   -e AWS_SECRET_ACCESS_KEY=\$AWS_SECRET_ACCESS_KEY \
-                  -e AWS_REGION=us-west-2 \
                   mawhaze/ansible:latest \
                   ansible-playbook -i /etc/ansible/inventories/inventory.proxmox.yml /etc/ansible/playbooks/ubuntu/test_k8s.yml'
               )
