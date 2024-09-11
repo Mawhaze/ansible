@@ -34,6 +34,7 @@
         --cri-socket unix:///var/run/cri-dockerd.sock
 
     - name: Create .kube directory
+      become: true
       file:
         path: /home/sa-k8s/.kube
         state: directory
