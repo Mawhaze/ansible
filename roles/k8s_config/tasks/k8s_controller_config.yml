@@ -52,13 +52,16 @@
         group: "{{ k8s_user }}"
 
     - name: Install Flannel network plugin
+      become_user: "{{ k8s_user}}"
       command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
     - name: Get join command
+      become_user: "{{ k8s_user }}"
       command: kubeadm token create --print-join-command
       register: join_command
 
     - name: Get certificate key
+      become_user: "{{ k8s_user }}"
       command: kubeadm init phase upload-certs --upload-certs
       register: certificate_key
  
