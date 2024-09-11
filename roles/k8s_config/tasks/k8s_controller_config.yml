@@ -15,7 +15,6 @@
 # Create a new cluster
 - name: Initialize k8s controller
   become_user: sa-k8s
-  become: true
   block:
     - name: Validate new controller node
       find:
@@ -29,31 +28,37 @@
       when: kube_config_set.matched > 0
 
     - name: Initialize Kubernetes cluster
+      become: true
       command: >
         kubeadm init 
         --pod-network-cidr=10.244.0.0/16 
         --cri-socket unix:///var/run/cri-dockerd.sock
 
     - name: Create .kube directory
+      become: true
       file:
         path: /home/sa-k8s/.kube
         state: directory
         mode: '0755'
 
     - name: Copy admin.conf to user's kube config
+      become: true
       copy:
         src: /etc/kubernetes/admin.conf
         dest: /home/sa-k8s/.kube/config
         remote_src: true
 
     - name: Install Flannel network plugin
+      become: true
       command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
     - name: Get join command
+      become: true
       command: kubeadm token create --print-join-command
       register: join_command
 
     - name: Get certificate key
+      become: true
       command: kubeadm init phase upload-certs --upload-certs
       register: certificate_key
  
