@@ -18,7 +18,7 @@
   block:
     - name: Validate new controller node
       find:
-        paths: "/home/{{ become_user }}/.kube"
+        paths: /home/sa-k8s/.kube
         patterns: config
       register: kube_config_set
 
@@ -35,7 +35,7 @@
 
     - name: Create .kube directory
       file:
-        path: /home/{{ become_user }}/.kube"
+        path: /home/sa-k8s/.kube
         state: directory
         mode: '0755'
 
@@ -43,7 +43,7 @@
       become: true
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/{{ become_user }}/.kube/config
+        dest: /home/sa-k8s/.kube/config
         remote_src: true
 
     - name: Install Flannel network plugin
