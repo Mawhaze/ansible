@@ -10,7 +10,7 @@
 - name: DEBUG - Display ssm value
   debug:
     var: ssm_join_command
-  when: not ssm_join_result is succeeded
+  when: ssm_join_result is succeeded
 
 # Create a new cluster
 - name: Initialize k8s controller
@@ -52,32 +52,40 @@
       command: kubeadm token create --print-join-command
       register: join_command
 
-    - name: DEBUG - Display join command
-      debug:
-        var: join_command
-
     - name: Get certificate key
       command: kubeadm init phase upload-certs --upload-certs
       register: certificate_key
+ 
+    - name: DEBUG - Display join command
+      debug:
+        msg: 
+          join_command: "{{ join_command.stdout }}"
+          certificate_key: "{{ certificate_key.stdout }}"
 
     - name: Store join command in AWS SSM Parameter Store
       community.aws.ssm_parameter:
         name: "/ansible/k8s/join-command"
-        value: "{{ join_command.stdout }} --control-plane --certificate-key {{ certificate_key.stdout }}"
+        value: "{{ join_command.stdout }}"
         string_type: SecureString
-  when: ssm_join_command.failed or ssm_join_command.parameters | length == 0
+
+    - name: Store certificate key in AWS SSM Parameter Store
+      community.aws.ssm_parameter:
+        name: "/ansible/k8s/certificate-key"
+        value: "{{ certificate_key.stdout }}"
+        string_type: SecureString
+  when: ssm_join_result is failed
 
 # Join additional controllers
-- name: Join additional controller to the cluster
-  block:
-    - name: Retrieve join command from AWS SSM Parameter Store
-      set_fact:
-        join_command: "{{ ssm_join_command.parameters[0].value }}"
+# - name: Join additional controller to the cluster
+#   block:
+#     - name: Retrieve join command from AWS SSM Parameter Store
+#       set_fact:
+#         join_command: "{{ ssm_join_command.parameters[0].value }}"
 
-    - name: Join the cluster as an additional controller
-      command: "{{ join_command }}"
-  when: not ssm_join_command.failed and ssm_join_command.parameters | length > 0
+#     - name: Join the cluster as an additional controller
+#       command: "{{ join_command }}"
 
-- name: Debug - Display join command
-  debug:
-    var: join_command
+#     - name: Debug - Display join controller command
+#       debug:
+#         var: join_command
+#   when: not ssm_join_result is succeeded
