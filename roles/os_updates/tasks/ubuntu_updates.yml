@@ -39,9 +39,9 @@
   retries: 10
   delay: 10
 
-- name: DEBUG - list upgrade_results
-  ansible.builtin.debug:
-    msg: "{{ upgrade_results }}"
+# - name: DEBUG - list upgrade_results
+#   ansible.builtin.debug:
+#     msg: "{{ upgrade_results }}"
 
 - name: Check if reboot is required
   ansible.builtin.stat:

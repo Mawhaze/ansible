@@ -33,4 +33,4 @@
 
 - name: Clear current apt cache
   ansible.builtin.shell: apt-get clean
-  ignore_errors: yes
+  ignore_errors: true
