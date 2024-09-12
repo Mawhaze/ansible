@@ -61,7 +61,7 @@
       register: join_command
 
     - name: Get certificate key
-      shell: sudo -u {{ k8s_user }} kubeadm init phase upload-certs --upload-certs
+      shell: kubeadm init phase upload-certs --upload-certs
       register: certificate_key
  
     - name: DEBUG - Display join command
