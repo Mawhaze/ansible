@@ -16,6 +16,8 @@
 - name: Initialize k8s controller
   block:
     - name: Validate new controller node
+      become: true
+      become_user: "{{ k8s_user }}"
       find:
         paths: /home/{{ k8s_user }}/.kube
         patterns: config
@@ -52,11 +54,8 @@
         group: "{{ k8s_user }}"
 
     - name: Install Flannel network plugin
-      become: true
-      become_user: "{{ k8s_user }}"
       shell: 
         cmd: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-        chdir: /home/{{ k8s_user }}
 
     - name: Get join command
       become_user: "{{ k8s_user }}"
