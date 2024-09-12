@@ -51,14 +51,11 @@
         owner: "{{ k8s_user }}"
         group: "{{ k8s_user }}"
 
-    - name: Pause for 30 seconds
-      pause:
-        seconds: 30
-        prompt: "Waiting for controller to initialize"
-
     - name: Install Flannel network plugin
       become_user: "{{ k8s_user}}"
-      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      command: 
+        cmd: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+        chdir: /home/{{ k8s_user }}
 
     - name: Get join command
       become_user: "{{ k8s_user }}"
