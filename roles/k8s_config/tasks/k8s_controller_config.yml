@@ -54,14 +54,14 @@
 
     - name: Install Flannel network plugin
       shell: 
-        cmd: sudo -u sa-k8s kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+        cmd: sudo -u {{ k8s_user }} kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
     - name: Get join command
-      command: kubeadm token create --print-join-command
+      shell: sudo -u {{ k8s_user }} kubeadm token create --print-join-command
       register: join_command
 
     - name: Get certificate key
-      command: kubeadm init phase upload-certs --upload-certs
+      shell: sudo -u {{ k8s_user }} kubeadm init phase upload-certs --upload-certs
       register: certificate_key
  
     - name: DEBUG - Display join command
