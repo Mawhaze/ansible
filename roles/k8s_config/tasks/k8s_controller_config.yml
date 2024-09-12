@@ -53,11 +53,8 @@
         group: "{{ k8s_user }}"
 
     - name: Install Flannel network plugin
-      command: 
-        cmd: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-        become: true
-        become_user: "{{ k8s_user }}"
-        become_method: su
+      shell: 
+        cmd: sudo -u sa-k8s kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
     - name: Get join command
       command: kubeadm token create --print-join-command
