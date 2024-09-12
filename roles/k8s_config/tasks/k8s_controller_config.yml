@@ -52,7 +52,7 @@
         group: "{{ k8s_user }}"
 
     - name: Install Flannel network plugin
-      command: 
+      shell: 
         cmd: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
         chdir: /home/{{ k8s_user }}
 
