@@ -61,6 +61,7 @@
       register: join_command
 
     - name: Get certificate key
+      become: true
       shell: kubeadm init phase upload-certs --upload-certs
       register: certificate_key
  
