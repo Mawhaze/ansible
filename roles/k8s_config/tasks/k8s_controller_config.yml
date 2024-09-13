@@ -76,6 +76,7 @@
         name: "/ansible/k8s/join-command"
         value: "{{ join_command.stdout }}"
         string_type: SecureString
+        region: "us-west-2"
       delegate_to: localhost
 
     - name: Store certificate key in AWS SSM Parameter Store
@@ -83,6 +84,7 @@
         name: "/ansible/k8s/certificate-key"
         value: "{{ certificate_key.stdout }}"
         string_type: SecureString
+        region: "us-west-2"
       delegate_to: localhost
   when: ssm_join_result is failed
 
