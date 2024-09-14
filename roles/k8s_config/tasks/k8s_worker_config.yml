@@ -1,0 +1,28 @@
+---
+# Precheck validation
+- name: Validate new worker node
+  become: true
+  find:
+    paths: /etc/kubernetes
+    patterns: kubelet.conf
+  register: kube_config_set
+
+- name: End playbook if worker is already configured
+  fail:
+    msg: "The worker node jas been attached to the cluster"
+  when: kube_config_set.matched > 0
+
+- name: Check for existing join command in AWS SSM Parameter Store
+  set_fact:
+    ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command', region='us-west-2', decrypt='true') }}"
+  delegate_to: localhost
+  register: ssm_join_result
+  ignore_errors: true
+
+# Add k8s worker nodes to the cluster
+- name: Add new worker to the cluster
+  block:
+    - name: Join the Kubernetes cluster
+      become: true
+      command: "{{ ssm_join_command }}"
+  when: ssm_join_result is succeeded
