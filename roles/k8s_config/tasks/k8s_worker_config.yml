@@ -1,16 +1,15 @@
 ---
 # Precheck validation
-- name: Validate new worker node
+- name: Validate new controller node
   become: true
-  find:
-    paths: /etc/kubernetes
-    patterns: kubelet.conf
+  stat:
+    path: /home/{{ k8s_user }}/.kube/config
   register: kube_config_set
 
-- name: End playbook if worker is already configured
-  fail:
-    msg: "The worker node jas been attached to the cluster"
-  when: kube_config_set.matched > 0
+- name: Set skip for configured nodes
+  set_fact:
+    skip_config: "{{ kube_config_set.stat.exists }}"
+  when: kube_config_set.stat.exists
 
 - name: Check for existing join command in AWS SSM Parameter Store
   set_fact:
@@ -25,4 +24,6 @@
     - name: Join the Kubernetes cluster
       become: true
       command: "{{ ssm_join_command }}"
-  when: ssm_join_result is succeeded
+  when:
+    - ssm_join_result is succeeded
+    - not skip_config

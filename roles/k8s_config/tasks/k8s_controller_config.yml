@@ -2,15 +2,14 @@
 # Precheck validation
 - name: Validate new controller node
   become: true
-  find:
-    paths: /home/{{ k8s_user }}/.kube
-    patterns: config
+  stat:
+    path: /home/{{ k8s_user }}/.kube/config
   register: kube_config_set
 
-- name: End playbook if controller is already configured
-  fail:
-    msg: "Controller is already configured"
-  when: kube_config_set.matched > 0
+- name: Set skip for configured nodes
+  set_fact:
+    skip_config: "{{ kube_config_set.stat.exists }}"
+  when: kube_config_set.stat.exists
 
 - name: Check for existing join command in AWS SSM Parameter Store
   set_fact:
@@ -86,7 +85,9 @@
         string_type: SecureString
         region: "us-west-2"
       delegate_to: localhost
-  when: ssm_join_result is failed
+  when:
+    - ssm_join_result is failed
+    - not skip_config
 
 # Join additional controllers
 # tasks to be built out with AWS env, after homelab migration to k8s
