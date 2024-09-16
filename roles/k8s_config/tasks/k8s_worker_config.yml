@@ -1,6 +1,6 @@
 ---
 # Precheck validation
-- name: Validate new controller node
+- name: Validate new worker node
   become: true
   stat:
     path: /etc/kubernetes/kubelet.conf
@@ -29,7 +29,7 @@
   command: "{{ ssm_join_command }}"
   when:
   - ssm_join_result is succeeded
-  - not skip_config
+  - skip_config is not defined
 
 # Notify if the join command is not found
 - name: Notify user of missing join command
