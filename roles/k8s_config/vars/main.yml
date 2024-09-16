@@ -15,3 +15,6 @@ k8s_packages:
   - kubectl
 
 k8s_version: '1.31'
+
+additional_packages:
+  - socat

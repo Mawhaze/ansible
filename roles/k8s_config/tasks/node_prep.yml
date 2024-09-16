@@ -29,6 +29,14 @@
   with_items:
     - "{{ k8s_packages }}"
 
+- name: Install non-k8s packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ additional_packages }}"
+
 - name: Hold k8s packages at current version
   dpkg_selections:
     name: "{{ item }}"
