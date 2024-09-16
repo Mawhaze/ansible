@@ -11,6 +11,11 @@
     skip_config: "{{ kube_config_set.stat.exists }}"
   when: kube_config_set.stat.exists
 
+- name: Notify user of existing configuration
+  debug:
+    msg: "Kubernetes controller already configured. Skipping configuration."
+  when: kube_config_set.stat.exists
+  
 - name: Check for existing join command in AWS SSM Parameter Store
   set_fact:
     ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command', region='us-west-2', decrypt='true') }}"
@@ -99,4 +104,4 @@
 #     - name: Debug - Display join controller command
 #       debug:
 #         var: join_command
-#   when: not ssm_join_result is succeeded
+#   when: ssm_join_result is succeeded
