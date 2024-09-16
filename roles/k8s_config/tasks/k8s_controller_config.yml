@@ -18,7 +18,7 @@
   
 - name: Check for existing join command in AWS SSM Parameter Store
   set_fact:
-    ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command', region='us-west-2', decrypt='true') }}"
+    ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
   delegate_to: localhost
   register: ssm_join_result
   ignore_errors: true
