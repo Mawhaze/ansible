@@ -32,17 +32,17 @@
     register: ssm_parameter_info
     delegate_to: localhost
 
-  - name: DEBUG - Display SSM parameter info
-    debug:
-      var: ssm_parameter_info
+  # - name: DEBUG - Display SSM parameter info
+  #   debug:
+  #     var: ssm_parameter_info
 
   - name: Calculate parameter age in hours
     set_fact:
-      parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) }}"
+      parameter_age: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int) / 3600) }}"
 
   - name: DEBUG - Display parameter age
     debug:
-      var: parameter_age_hours  
+      msg: "The parameter age is {{ parameter_age }} hours."
 # # Add k8s worker nodes to the cluster
 # - name: Add new worker to the cluster
 #   become: true
