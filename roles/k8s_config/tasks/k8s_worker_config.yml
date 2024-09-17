@@ -16,27 +16,28 @@
     msg: "Kubernetes worker already configured. Skipping configuration."
   when: kube_config_set.stat.exists
 
-- name: Check for existing join command in AWS SSM Parameter Store
-  set_fact:
-    ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
-  delegate_to: localhost
-  register: ssm_join_result
+# - name: Check for existing join command in AWS SSM Parameter Store
+#   set_fact:
+#     ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
+#   delegate_to: localhost
+#   register: ssm_join_result
 
-- name: DEBUG - Display SSM metadata
-  debug:
-    var: ssm_join_result
-# # Confirm the join command is valid
-# - name: Check the join command age and update if needed
-#   block: # TODO - finish building out this block
-#   - name: Get SSM parameter metadata
-#     aws_ssm_parameter_info:
-#       name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
-#       region: "us-west-2"
-#     register: ssm_parameter_info
+# Confirm the join command is valid
+- name: Check the join command age and update if needed
+  block: # TODO - finish building out this block
+  - name: Get SSM parameter metadata
+    community.aws.ssm_parameter:
+      name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
+      region: "us-west-2"
+    register: ssm_parameter_info
 
-#   - name: Calculate parameter age in hours
-#     set_fact:
-#       parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters[0].last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) | round(2) }}"
+  - name: DEBUG - Display SSM parameter info
+    debug:
+      var: ssm_parameter_info
+
+  # - name: Calculate parameter age in hours
+  #   set_fact:
+  #     parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters[0].last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) | round(2) }}"
     
 # # Add k8s worker nodes to the cluster
 # - name: Add new worker to the cluster
