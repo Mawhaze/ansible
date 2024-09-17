@@ -23,29 +23,32 @@
   register: ssm_join_result
   ignore_errors: true
 
-# Confirm the join command is valid
-- name: Check the join command age and update if needed
-  block: # TODO - finish building out this block
-  - name: Get SSM parameter metadata
-    aws_ssm_parameter_info:
-      name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
-      region: "us-west-2"
-    register: ssm_parameter_info
-
-  - name: Calculate parameter age in hours
-    set_fact:
-      parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters[0].last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) | round(2) }}"
-    
-# Add k8s worker nodes to the cluster
-- name: Add new worker to the cluster
-  become: true
-  command: "{{ ssm_join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
-  when:
-  - ssm_join_result is succeeded
-  - skip_config is not defined
-
-# Notify if the join command is not found
-- name: Notify user of missing join command
+- name: DEBUG - Display SSM metadata
   debug:
-    msg: "No cluster join command found. Skipping worker configuration."
-  when: ssm_join_result is failed
+    var: ssm_join_result
+# # Confirm the join command is valid
+# - name: Check the join command age and update if needed
+#   block: # TODO - finish building out this block
+#   - name: Get SSM parameter metadata
+#     aws_ssm_parameter_info:
+#       name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
+#       region: "us-west-2"
+#     register: ssm_parameter_info
+
+#   - name: Calculate parameter age in hours
+#     set_fact:
+#       parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters[0].last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) | round(2) }}"
+    
+# # Add k8s worker nodes to the cluster
+# - name: Add new worker to the cluster
+#   become: true
+#   command: "{{ ssm_join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
+#   when:
+#   - ssm_join_result is succeeded
+#   - skip_config is not defined
+
+# # Notify if the join command is not found
+# - name: Notify user of missing join command
+#   debug:
+#     msg: "No cluster join command found. Skipping worker configuration."
+#   when: ssm_join_result is failed
