@@ -24,7 +24,7 @@
 
 # Confirm the join command is valid
 - name: Check the join command age and update if needed
-  block: # TODO - finish building out this block
+  block:
   - name: Get SSM parameter metadata
     community.aws.ssm_parameter:
       name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
@@ -36,10 +36,13 @@
     debug:
       var: ssm_parameter_info
 
-  # - name: Calculate parameter age in hours
-  #   set_fact:
-  #     parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters[0].last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) | round(2) }}"
-    
+  - name: Calculate parameter age in hours
+    set_fact:
+      parameter_age_hours: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameters_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ') | int)) / 3600) }}"
+
+  - name: DEBUG - Display parameter age
+    debug:
+      var: parameter_age_hours  
 # # Add k8s worker nodes to the cluster
 # - name: Add new worker to the cluster
 #   become: true
