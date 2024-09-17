@@ -6,7 +6,7 @@
     path: /home/{{ k8s_user }}/.kube/config
   register: kube_config_set
 
-- name: Set skip for configured nodes
+- name: Skip pre-configured nodes
   set_fact:
     skip_config: "{{ kube_config_set.stat.exists }}"
   when: kube_config_set.stat.exists
@@ -92,7 +92,7 @@
       delegate_to: localhost
   when:
     - ssm_join_result is failed
-    - not skip_config
+    - skip_config is not defined
 
 # Join additional controllers
 # tasks to be built out with AWS env, after homelab migration to k8s

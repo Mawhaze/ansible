@@ -21,7 +21,6 @@
     ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
   delegate_to: localhost
   register: ssm_join_result
-  ignore_errors: true
 
 - name: DEBUG - Display SSM metadata
   debug:
