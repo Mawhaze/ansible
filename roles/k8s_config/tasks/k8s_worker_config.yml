@@ -30,6 +30,7 @@
       name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
       region: "us-west-2"
     register: ssm_parameter_info
+    delegate_to: localhost
 
   - name: DEBUG - Display SSM parameter info
     debug:
