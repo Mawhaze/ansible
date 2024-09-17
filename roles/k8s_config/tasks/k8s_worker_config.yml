@@ -32,13 +32,13 @@
     register: ssm_parameter_info
     delegate_to: localhost
 
-  # - name: DEBUG - Display SSM parameter info
-  #   debug:
-  #     var: ssm_parameter_info
+  - name: DEBUG - Display SSM parameter info
+    debug:
+      var: ssm_parameter_info
 
   - name: Calculate parameter age in hours
     set_fact:
-      parameter_age: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f+00:00') | int) / 3600) }}"
+      parameter_age: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int) / 3600) }}"
 
   - name: DEBUG - Display parameter age
     debug:
@@ -46,7 +46,8 @@
       - "The parameter age is {{ parameter_age }} hours."
       - "ansible date time: {{ ansible_date_time.epoch | int }}"
       - "raw last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date }}"
-      - "last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f+00:00') | int }}"
+      - "last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int }}"
+
 # # Add k8s worker nodes to the cluster
 # - name: Add new worker to the cluster
 #   become: true
