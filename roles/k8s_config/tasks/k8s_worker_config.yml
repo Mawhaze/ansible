@@ -35,10 +35,18 @@
   - name: DEBUG - Display SSM parameter info
     debug:
       var: ssm_parameter_info
+  
+  - name: Generate current date/time in the same format
+    set_fact:
+      current_datetime: "{{ '%Y-%m-%dT%H:%M:%S.%f%z' | strftime }}"
+
+  - name: DEBUG - Display current date/time
+    debug:
+      msg: "Current date/time: {{ current_datetime }}"
 
   - name: Calculate parameter age in hours
     set_fact:
-      parameter_age: "{{ ((ansible_date_time.epoch | int) - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int) / 3600) }}"
+      parameter_age: "{{ ((current_datetime | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int) - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int)) / 3600 }}"
 
   - name: DEBUG - Display parameter age
     debug:
