@@ -21,15 +21,14 @@
     join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
   when: join_command is not defined
 
-- name: DEBUG - Display join command
-  debug:
-    msg: 
-      join_command: "{{ join_command }}"
+# - name: DEBUG - Display join command
+#   debug:
+#     msg: 
+#       join_command: "{{ join_command }}"
 
 # Add k8s worker nodes to the cluster
 - name: Add new worker to the cluster
   become: true
-  command: "{{ ssm_join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
+  command: "{{ join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
   when:
-  - ssm_join_result is succeeded
   - skip_config is not defined
