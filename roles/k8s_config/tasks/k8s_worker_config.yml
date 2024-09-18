@@ -38,7 +38,7 @@
   
   - name: Generate current date/time in the same format
     set_fact:
-      current_datetime: "{{ ansible_date_time.iso8601 }}"
+      current_datetime: "{{ now(utc=true,fmt='%Y-%m-%dT%H:%M:%S.%f%z') }}"
 
   - name: DEBUG - Display current date/time
     debug:
