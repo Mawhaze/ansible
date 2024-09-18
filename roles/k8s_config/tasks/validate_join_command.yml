@@ -26,12 +26,12 @@
     set_fact:
       parameter_age: "{{ ((current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp() - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp()) / 3600 | int }}"
 
-  # - name: DEBUG - Display parameter age
-  #   debug:
-  #     msg: 
-  #     - "The parameter age is {{ parameter_age }} hours."
-  #     - "ansible date time: {{ current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
-  #     - "raw last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
+  - name: DEBUG - Display parameter age
+    debug:
+      msg: 
+      - "The parameter age is {{ parameter_age }} hours."
+      - "ansible date time: {{ current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
+      - "raw last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
   when: ssm_join_result is succeeded
 
 - name: Update the join command if older than 24 hours
