@@ -37,8 +37,9 @@
       var: ssm_parameter_info
   
   - name: Generate current date/time in the same format
-    set_fact:
-      current_datetime: "{{ '%Y-%m-%dT%H:%M:%S.%f%z' | strftime(ansible_date_time.epoch | int) }}"
+    shell: "date -u '+%Y-%m-%dT%H:%M:%S.%6N%z'"
+    register: current_datetime
+    delegate_to: localhost
 
   - name: DEBUG - Display current date/time
     debug:
