@@ -16,46 +16,15 @@
     msg: "Kubernetes worker already configured. Skipping configuration."
   when: kube_config_set.stat.exists
 
-# - name: Check for existing join command in AWS SSM Parameter Store
-#   set_fact:
-#     ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
-#   delegate_to: localhost
-#   register: ssm_join_result
+- name: Set join command if not already set
+  set_fact:
+    join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
+  when: join_command is not defined
 
-# Confirm the join command is valid
-- name: Check the join command age and update if needed
-  block:
-  - name: Get SSM parameter metadata
-    community.aws.ssm_parameter:
-      name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
-      region: "us-west-2"
-    register: ssm_parameter_info
-    delegate_to: localhost
-
-  - name: DEBUG - Display SSM parameter info
-    debug:
-      var: ssm_parameter_info
-  
-  - name: Generate current date/time in the same format
-    shell: "date -u '+%Y-%m-%dT%H:%M:%S.%6N%z'"
-    register: current_datetime
-    delegate_to: localhost
-
-  - name: DEBUG - Display current date/time
-    debug:
-      msg: "Current date/time: {{ current_datetime.stdout }}"
-
-  - name: Calculate parameter age in hours
-    set_fact:
-      parameter_age: "{{ ((current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp() - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp()) / 3600 }}"
-
-  - name: DEBUG - Display parameter age
-    debug:
-      msg: 
-      - "The parameter age is {{ parameter_age }} hours."
-      - "ansible date time: {{ current_datetime.stdout }}/{{ current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
-      - "raw last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date }}/{{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
-      - "last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int }}"
+- name: DEBUG - Display join command
+  debug:
+    msg: 
+      join_command: "{{ join_command }}"
 
 # # Add k8s worker nodes to the cluster
 # - name: Add new worker to the cluster
