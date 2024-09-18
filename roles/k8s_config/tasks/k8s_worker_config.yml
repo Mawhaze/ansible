@@ -26,16 +26,10 @@
     msg: 
       join_command: "{{ join_command }}"
 
-# # Add k8s worker nodes to the cluster
-# - name: Add new worker to the cluster
-#   become: true
-#   command: "{{ ssm_join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
-#   when:
-#   - ssm_join_result is succeeded
-#   - skip_config is not defined
-
-# # Notify if the join command is not found
-# - name: Notify user of missing join command
-#   debug:
-#     msg: "No cluster join command found. Skipping worker configuration."
-#   when: ssm_join_result is failed
+# Add k8s worker nodes to the cluster
+- name: Add new worker to the cluster
+  become: true
+  command: "{{ ssm_join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
+  when:
+  - ssm_join_result is succeeded
+  - skip_config is not defined
