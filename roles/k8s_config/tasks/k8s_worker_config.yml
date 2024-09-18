@@ -47,7 +47,8 @@
 
   - name: Calculate parameter age in hours
     set_fact:
-    parameter_age: "{{ ((current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp() - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp()) / 3600 }}"
+      parameter_age: "{{ ((current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp() - (ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z')).timestamp()) / 3600 }}"
+
   - name: DEBUG - Display parameter age
     debug:
       msg: 
