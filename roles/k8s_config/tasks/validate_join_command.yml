@@ -58,12 +58,12 @@
       region: "us-west-2"
     delegate_to: localhost
   when: 
-    - parameter_age > 24
+    - int(parameter_age) > 24
     - ssm_join_result is succeeded
 
 - name: Set join command if less that 24 hours
   set_fact:
     join_command: "{{ ssm_join_command }}"
   when: 
-    - parameter_age <= 24
+    - int(parameter_age) <= 24
     - ssm_join_result is succeeded
