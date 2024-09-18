@@ -53,8 +53,8 @@
     debug:
       msg: 
       - "The parameter age is {{ parameter_age }} hours."
-      - "ansible date time: {{ ansible_date_time.epoch | int }}"
-      - "raw last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date }}"
+      - "ansible date time: {{ current_datetime.stdout }}/{{ current_datetime.stdout | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
+      - "raw last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date }}/{{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') }}"
       - "last modified date: {{ ssm_parameter_info.parameter_metadata.last_modified_date | to_datetime('%Y-%m-%dT%H:%M:%S.%f%z') | int }}"
 
 # # Add k8s worker nodes to the cluster
