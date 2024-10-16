@@ -9,22 +9,23 @@
 
 # Configure k8s nodes
 - name: Prep k8s nodes
-  include_tasks: 
+  include_tasks:
     file: node_prep.yml
     apply:
       become: true
 
 - name: Check and validate join command
   include_tasks: validate_join_command.yml
+  run_once: true
   when:
     - "'k8s_controller' in proxmox_tags_parsed"
 
 - name: Run k8s controller config
   include_tasks: k8s_controller_config.yml
-  when: 
+  when:
     - "'k8s_controller' in proxmox_tags_parsed"
 
 - name: Run k8s worker config
   include_tasks: k8s_worker_config.yml
-  when: 
+  when:
     - "'k8s_worker' in proxmox_tags_parsed"

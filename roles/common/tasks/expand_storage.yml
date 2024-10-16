@@ -35,28 +35,28 @@
 - name: Grow the root partition
   command: growpart {{ disk_name }} {{ partition_number }}
   register: growpart_result
-  failed_when: 
-    - growpart_result.rc != 0 
+  failed_when:
+    - growpart_result.rc != 0
     - "'NOCHANGE' not in growpart_result.stderr"
   changed_when: growpart_result.rc == 0
   ignore_errors: true
 
 - name: Finish Resize
   block:
-  - name: Resize physical volume
-    command: pvresize {{ pv_device.stdout }}
+    - name: Resize physical volume
+      command: pvresize {{ pv_device.stdout }}
 
-  - name: Resize logical volume
-    lvol:
-      vg: "{{ vg_name.stdout }}"
-      lv: "{{ lv_name.stdout }}"
-      size: +100%FREE
+    - name: Resize logical volume
+      lvol:
+        vg: "{{ vg_name.stdout }}"
+        lv: "{{ lv_name.stdout }}"
+        size: +100%FREE
 
-  - name: Resize filesystem
-    filesystem:
-      fstype: "{{ fs_type.stdout }}"
-      dev: "{{ root_device.stdout }}"
-      resizefs: true
+    - name: Resize filesystem
+      filesystem:
+        fstype: "{{ fs_type.stdout }}"
+        dev: "{{ root_device.stdout }}"
+        resizefs: true
   when: growpart_result is changed
 
 # Gather updated disk info
