@@ -7,6 +7,7 @@
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
     api_host: "{{ proxmox_cluster_url | regex_replace('^https://', '') | regex_replace(':8006$', '') }}"
+    api_port: 8006
     validate_certs: true
   register: vm_info
 
