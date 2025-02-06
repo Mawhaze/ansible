@@ -29,6 +29,6 @@
 # Add k8s worker nodes to the cluster
 - name: Add new worker to the cluster
   become: true
-  command: "{{ join_command }} --cri-socket unix:///var/run/cri-dockerd.sock"
+  command: "{{ join_command }} --cri-socket unix:///var/run/containerd/containerd.sock"
   when:
   - skip_config is not defined
