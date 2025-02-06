@@ -47,7 +47,6 @@
 # Host configs for k8s nodes
 - name: Disable swap
   command: swapoff -a
-  when: ansible_swaptotal_mb > 0
 
 - name: Remove swap /etc/fstab entry
   lineinfile:
