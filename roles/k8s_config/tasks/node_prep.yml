@@ -9,6 +9,37 @@
 # - name: Configure CRI-Dockerd
 #   include_tasks: cri_dockerd_config.yml
 
+# Configure containerd
+- name: Update /etc/containerd/config.toml to remove cri from disabled_plugins and add configuration
+  become: true
+  block:
+    - name: Remove 'cri' from disabled_plugins
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^disabled_plugins = .*'
+        line: 'disabled_plugins = []'
+        backrefs: yes
+        state: present
+
+    - name: Add CRI plugin configuration to /etc/containerd/config.toml
+      ansible.builtin.blockinfile:
+        path: /etc/containerd/config.toml
+        marker: "# BEGIN CRI CONFIG"
+        block: |
+          [plugins."io.containerd.grpc.v1.cri"]
+            sandbox_image = "k8s.gcr.io/pause:3.10"
+            [plugins."io.containerd.grpc.v1.cri".containerd]
+              snapshotter = "overlayfs"
+              default_runtime_name = "runc"
+              [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+                runtime_type = "io.containerd.runc.v2"
+        state: present
+
+    - name: Restart containerd service to apply changes
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+
 - name: Add k8s apt key
   get_url:
     url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
