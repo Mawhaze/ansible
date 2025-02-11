@@ -11,6 +11,12 @@
     state: present
     update_cache: yes
 
+- name: Disable containerd service
+  systemd:
+    name: containerd
+    enabled: no
+    state: stopped
+
 - name: Create cri-docker.service
   template:
     src: cri-docker.service.j2
