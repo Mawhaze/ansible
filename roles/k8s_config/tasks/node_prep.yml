@@ -5,8 +5,9 @@
     name: common
     tasks_from: docker_setup.yml
 
-- name: Configure CRI-Dockerd
-  include_tasks: cri_dockerd_config.yml
+# Containerd tests
+# - name: Configure CRI-Dockerd
+#   include_tasks: cri_dockerd_config.yml
 
 - name: Add k8s apt key
   get_url:

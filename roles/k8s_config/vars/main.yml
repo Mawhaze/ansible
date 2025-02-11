@@ -14,7 +14,7 @@ k8s_packages:
   - kubeadm
   - kubectl
 
-k8s_version: '1.32'
+k8s_version: '1.31'
 
 additional_packages:
   - socat
