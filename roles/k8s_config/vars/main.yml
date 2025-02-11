@@ -7,7 +7,7 @@ docker_users:
 
 k8s_user: 'sa-k8s'
 
-docker_cri_version: '0.3.17'
+docker_cri_version: '0.3.16'
 
 k8s_packages:
   - kubelet
