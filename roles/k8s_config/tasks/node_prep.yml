@@ -10,11 +10,11 @@
 #   include_tasks: cri_dockerd_config.yml
 
 # Configure containerd
-- name: Update /etc/containerd/config.toml to remove cri from disabled_plugins and add configuration
+- name: Update /etc/containerd/config.toml
   become: true
   block:
     - name: Remove 'cri' from disabled_plugins
-      ansible.builtin.lineinfile:
+      lineinfile:
         path: /etc/containerd/config.toml
         regexp: '^disabled_plugins = .*'
         line: 'disabled_plugins = []'
@@ -22,7 +22,7 @@
         state: present
 
     - name: Add CRI plugin configuration to /etc/containerd/config.toml
-      ansible.builtin.blockinfile:
+      blockinfile:
         path: /etc/containerd/config.toml
         marker: "# BEGIN CRI CONFIG"
         block: |
@@ -36,7 +36,7 @@
         state: present
 
     - name: Restart containerd service to apply changes
-      ansible.builtin.service:
+      service:
         name: containerd
         state: restarted
 
