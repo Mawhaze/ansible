@@ -1,0 +1,14 @@
+# containerd config.toml
+
+disabled_plugins = []
+
+# BEGIN CRI CONFIG
+[plugins."io.containerd.grpc.v1.cri"]
+  sandbox_image = "k8s.gcr.io/pause:3.10"
+  [plugins."io.containerd.grpc.v1.cri".containerd]
+    snapshotter = "overlayfs"
+    default_runtime_name = "runc"
+    [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+      runtime_type = "io.containerd.runc.v2"
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+        SystemdCgroup = true

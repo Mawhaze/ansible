@@ -10,35 +10,20 @@
 #   include_tasks: cri_dockerd_config.yml
 
 # Configure containerd
-- name: Update /etc/containerd/config.toml
-  become: true
-  block:
-    - name: Remove 'cri' from disabled_plugins
-      lineinfile:
-        path: /etc/containerd/config.toml
-        regexp: '^disabled_plugins = .*'
-        line: 'disabled_plugins = []'
-        backrefs: yes
-        state: present
+- name: Configure crictl
+  template:
+    src: crictl.yaml.j2
+    dest: /etc/crictl.yaml
 
-    - name: Add CRI plugin configuration to /etc/containerd/config.toml
-      blockinfile:
-        path: /etc/containerd/config.toml
-        marker: "# BEGIN CRI CONFIG"
-        block: |
-          [plugins."io.containerd.grpc.v1.cri"]
-            sandbox_image = "k8s.gcr.io/pause:3.10"
-            [plugins."io.containerd.grpc.v1.cri".containerd]
-              snapshotter = "overlayfs"
-              default_runtime_name = "runc"
-              [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-                runtime_type = "io.containerd.runc.v2"
-        state: present
+- name: Set containerd config
+  template:
+    src: config.toml.j2
+    dest: /etc/containerd/config.toml
 
-    - name: Restart containerd service to apply changes
-      service:
-        name: containerd
-        state: restarted
+- name: Restart containerd service to apply changes
+  service:
+    name: containerd
+    state: restarted
 
 - name: Add k8s apt key
   get_url:
