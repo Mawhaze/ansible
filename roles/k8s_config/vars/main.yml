@@ -2,12 +2,7 @@
 users:
   - sa-k8s
 
-docker_users:
-  - sa-k8s
-
 k8s_user: 'sa-k8s'
-
-docker_cri_version: '0.3.16'
 
 k8s_packages:
   - kubelet

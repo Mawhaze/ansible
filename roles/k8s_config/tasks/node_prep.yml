@@ -1,13 +1,4 @@
 ---
-# Containerd tests
-# - name: Configure Docker
-#   include_role:
-#     name: common
-#     tasks_from: docker_setup.yml
-
-# - name: Configure CRI-Dockerd
-#   include_tasks: cri_dockerd_config.yml
-
 # Host configs for k8s nodes
 - name: Disable swap
   command: swapoff -a
