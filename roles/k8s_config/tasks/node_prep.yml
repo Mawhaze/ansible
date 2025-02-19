@@ -1,13 +1,40 @@
 ---
-# Install required packages
-- name: Configure Docker
-  include_role:
-    name: common
-    tasks_from: docker_setup.yml
-
 # Containerd tests
+# - name: Configure Docker
+#   include_role:
+#     name: common
+#     tasks_from: docker_setup.yml
+
 # - name: Configure CRI-Dockerd
 #   include_tasks: cri_dockerd_config.yml
+
+# Host configs for k8s nodes
+- name: Disable swap
+  command: swapoff -a
+
+- name: Remove swap /etc/fstab entry
+  lineinfile:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    state: absent
+
+- name: Load kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - overlay
+    - br_netfilter
+
+- name: Configure stsctl
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+  loop:
+    - net.ipv4.ip_forward
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables
 
 # Configure containerd
 - name: Configure crictl
@@ -19,12 +46,15 @@
   template:
     src: config.toml.j2
     dest: /etc/containerd/config.toml
+  register: containerd_deployed
 
 - name: Restart containerd service to apply changes
   service:
     name: containerd
     state: restarted
+  when: containerd_deployed.stat.exists
 
+# Install required packages
 - name: Add k8s apt key
   get_url:
     url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
@@ -60,31 +90,3 @@
     selection: hold
   with_items:
     - "{{ k8s_packages }}"
-
-# Host configs for k8s nodes
-- name: Disable swap
-  command: swapoff -a
-
-- name: Remove swap /etc/fstab entry
-  lineinfile:
-    path: /etc/fstab
-    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
-    state: absent
-
-- name: Load kernel modules
-  modprobe:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - overlay
-    - br_netfilter
-
-- name: Configure stsctl
-  sysctl:
-    name: "{{ item }}"
-    value: "1"
-    state: present
-  loop:
-    - net.ipv4.ip_forward
-    - net.bridge.bridge-nf-call-iptables
-    - net.bridge.bridge-nf-call-ip6tables
