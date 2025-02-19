@@ -42,11 +42,24 @@
     src: crictl.yaml.j2
     dest: /etc/crictl.yaml
 
+- name: Install containerd
+  apt:
+    name: containerd
+    state: present
+    update_cache: yes
+  register: containerd_deployed
+
+- name: Create containerd directory
+  file:
+    path: /etc/containerd
+    state: directory
+  when: containerd_deployed.changed
+
 - name: Set containerd config
   template:
     src: config.toml.j2
     dest: /etc/containerd/config.toml
-  register: containerd_deployed
+  when: containerd_deployed
 
 - name: Restart containerd service to apply changes
   service:
