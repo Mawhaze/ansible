@@ -59,13 +59,13 @@
   template:
     src: config.toml.j2
     dest: /etc/containerd/config.toml
-  when: containerd_deployed
+  when: containerd_deployed.changed
 
 - name: Restart containerd service to apply changes
   service:
     name: containerd
     state: restarted
-  when: containerd_deployed.stat.exists
+  when: containerd_deployed.changed
 
 # Install required packages
 - name: Add k8s apt key
