@@ -97,7 +97,7 @@
 
   - name: Add helm repository
     apt_repository:
-      repo: "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
+      repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
       state: present
       update_cache: yes
 
