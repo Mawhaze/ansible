@@ -80,6 +80,19 @@
   with_items:
     - "{{ k8s_packages }}"
 
+- name: Add helm apt key
+  get_url:
+    url: https://baltocdn.com/helm/signing.asc
+    dest: /usr/share/keyrings/helm.gpg
+    mode: 0644
+    force: true
+
+- name: Add helm repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+    state: present
+    update_cache: yes
+
 - name: Install non-k8s packages
   apt:
     name: "{{ item }}"

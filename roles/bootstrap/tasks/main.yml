@@ -31,6 +31,12 @@
       tasks_from: docker_setup.yml
     when: "'service_docker' in group_names"
 
+  - name: Configure Kubernetes
+    include_role: 
+      name: k8s_config
+      tasks_from: main.yml
+    when: "'service_k8s' in group_names"
+
 - name: Cleanup
   include_tasks: cleanup.yml
   when: ansible_facts['distribution'] == "Ubuntu"
