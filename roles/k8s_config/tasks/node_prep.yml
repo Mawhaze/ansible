@@ -80,12 +80,17 @@
   with_items:
     - "{{ k8s_packages }}"
 
-- name: Add helm apt key
+- name: Get helm apt key
   get_url:
     url: https://baltocdn.com/helm/signing.asc
-    dest: /usr/share/keyrings/helm.gpg
+    dest: /tmp/helm.gpg
     mode: 0644
     force: true
+  register: deploy_helm_key
+
+- name: Add helm key to keyring
+  command: gpg --dearmor -o /usr/share/keyrings/helm.gpg /tmp/helm.gpg
+  when: deploy_helm_key.changed
 
 - name: Add helm repository
   apt_repository:
