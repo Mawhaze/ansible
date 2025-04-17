@@ -17,8 +17,6 @@
 - name: Check and validate join command
   include_tasks: validate_join_command.yml
   run_once: true
-  when:
-    - "'k8s_controller' in proxmox_tags_parsed"
 
 - name: Run k8s controller config
   include_tasks: k8s_controller_config.yml

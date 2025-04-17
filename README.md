@@ -12,6 +12,10 @@
 
 ## Playbooks to make
 
+- K8s
+  - Add to boot strap
+    > storageclass, 
+
 - Docker
   - maintenance - updates, image cleanup, etc.
   - nightly jenkins cleanup
