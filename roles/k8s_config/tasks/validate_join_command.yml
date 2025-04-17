@@ -15,7 +15,7 @@
       name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
       region: "us-west-2"
     register: ssm_parameter_info
-    become: true
+    become: false
     delegate_to: localhost
   
   - name: Generate current date/time in the same format
