@@ -3,7 +3,7 @@
 - name: Check for existing join command in AWS SSM Parameter Store
   set_fact:
     ssm_join_command: "{{ lookup('aws_ssm', '/ansible/k8s/' + (proxmox_name | regex_replace('\\d+$', '')) + '-join-command', region='us-west-2', decrypt='true') }}"
-  delegate_to: localhost
+  # delegate_to: localhost
   register: ssm_join_result
   ignore_errors: true
 
@@ -15,13 +15,13 @@
       name: "/ansible/k8s/{{ proxmox_name | regex_replace('\\d+$', '') }}-join-command"
       region: "us-west-2"
     register: ssm_parameter_info
-    become: false
-    delegate_to: localhost
+    # become: false
+    # delegate_to: localhost
   
   - name: Generate current date/time in the same format
     shell: "date -u '+%Y-%m-%dT%H:%M:%S.%6N%z'"
     register: current_datetime
-    delegate_to: localhost
+    # delegate_to: localhost
 
   - name: Calculate parameter age in hours
     set_fact:
