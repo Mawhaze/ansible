@@ -60,8 +60,8 @@
   set_fact:
     vm_ip_list: >-
       {{ vm_ip_list | default([]) + [
-        ((item.json.data.result | json_query('[?name!=`lo` && "ip-addresses"[?family==`ipv4` && "ip-address"!=`127.0.0.1`]]."ip-addresses"[0]."ip-address"') | first | default(''))) + ' ' + item.item.name + '.maw.local'
-      ] | select('regex', '^(?!\\s*$).+') | list }}
+        ((item.json.data.result | json_query('[1]."ip-addresses"[0]."ip-address"') | default(''))) + ' ' + item.item.name + '.maw.local'
+      ] | select('regex', '^(?!\\s*$).+') | list }
   loop: "{{ vm_network_info.results }}"
   when: item.json is defined and item.json.data.result is defined
   no_log: true
