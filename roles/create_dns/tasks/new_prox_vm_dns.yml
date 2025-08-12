@@ -34,34 +34,12 @@
   failed_when: false
   no_log: true
 
-- name: DEBUG | Show failed API calls
-  debug:
-    msg: 
-      - "VM: {{ item.item.name }} (ID: {{ item.item.vmid }})"
-      - "Status: {{ item.status }}"
-      - "Error: {{ item.msg | default('N/A') }}"
-      - "Response: {{ item.content | default('N/A') }}"
-  loop: "{{ vm_network_info.results }}"
-  when: item.failed | default(false)
-
-- name: Check if guest agent is running
-  uri:
-    url: "{{ proxmox_cluster_url }}/api2/json/nodes/{{ item.node }}/qemu/{{ item.vmid }}/agent/ping"
-    method: POST
-    headers:
-      Cookie: "PVEAuthCookie={{ proxmox_ticket.json.data.ticket }}"
-      CSRFPreventionToken: "{{ proxmox_ticket.json.data.CSRFPreventionToken }}"
-    validate_certs: true
-  register: agent_ping
-  loop: "{{ vm_info.proxmox_vms }}"
-  failed_when: false
-
 - name: Extract IP addresses
   set_fact:
     vm_ip_list: >-
       {{ vm_ip_list | default([]) + [
         ((item.json.data.result | json_query('[1]."ip-addresses"[0]."ip-address"') | default(''))) + ' ' + item.item.name + '.maw.local'
-      ] | select('regex', '^(?!\\s*$).+') | list }
+      ] | select('regex', '^(?!\\s*$).+') | list }}
   loop: "{{ vm_network_info.results }}"
   when: item.json is defined and item.json.data.result is defined
   no_log: true
